@@ -1,7 +1,7 @@
 {
   "name": "lang-global-helper",
   "displayName": "Sheet Language Global Helper",
-  "description": "구글 스프레드시트에서 다국어 데이터를 가져와 코드에서 hover로 확인할 수 있는 익스텐션",
+  "description": "An extension that fetches multilingual data from Google Spreadsheets and displays it on hover in code",
   "version": "0.0.8",
   "publisher": "language-global-helper",
   "icon": "global-hepler-logo.png",
@@ -28,36 +28,36 @@
         "languageHelper.sheetApiKey": {
           "type": "string",
           "default": "",
-          "description": "구글 시트 API 키 (우선순위 1)",
-          "markdownDescription": "구글 시트 API 키를 입력하세요. API 키가 있으면 API를 사용하고, 없으면 CSV URL을 사용합니다.",
+          "description": "Google Sheets API Key (Priority 1) / 구글 시트 API 키 (우선순위 1)",
+          "markdownDescription": "**English:** Enter your Google Sheets API key. If an API key is provided, it will be used. Otherwise, the CSV URL will be used.\n\n**한국어:** 구글 시트 API 키를 입력하세요. API 키가 있으면 API를 사용하고, 없으면 CSV URL을 사용합니다.",
           "order": 1
         },
         "languageHelper.sheetId": {
           "type": "string",
           "default": "",
-          "description": "구글 스프레드시트 ID (선택사항)",
-          "markdownDescription": "구글 스프레드시트 ID를 입력하세요. 비어있으면 sheetUrl에서 자동으로 추출합니다. 예: `https://docs.google.com/spreadsheets/d/{SPREADSHEET_ID}/edit`\n\n**⚠️ 필수 권한 설정:**\n- 구글 스프레드시트를 열고 우측 상단 **공유** 버튼 클릭\n- **링크가 있는 모든 사용자**로 설정\n- **뷰어** 권한으로 설정\n- 이 설정이 없으면 API로 데이터를 가져올 수 없습니다",
+          "description": "Google Spreadsheet ID (Optional) / 구글 스프레드시트 ID (선택사항)",
+          "markdownDescription": "**English:** Enter the Google Spreadsheet ID. If left empty, it will be automatically extracted from sheetUrl. Example: `https://docs.google.com/spreadsheets/d/{SPREADSHEET_ID}/edit`\n\n**⚠️ Required Permission Settings:**\n- Open the Google Spreadsheet and click the **Share** button in the top right\n- Set to **Anyone with the link**\n- Set permission to **Viewer**\n- Without this setting, data cannot be fetched via API\n\n**한국어:** 구글 스프레드시트 ID를 입력하세요. 비어있으면 sheetUrl에서 자동으로 추출합니다. 예: `https://docs.google.com/spreadsheets/d/{SPREADSHEET_ID}/edit`\n\n**⚠️ 필수 권한 설정:**\n- 구글 스프레드시트를 열고 우측 상단 **공유** 버튼 클릭\n- **링크가 있는 모든 사용자**로 설정\n- **뷰어** 권한으로 설정\n- 이 설정이 없으면 API로 데이터를 가져올 수 없습니다",
           "order": 2
         },
         "languageHelper.allSheetNames": {
           "type": "boolean",
           "default": true,
-          "description": "모든 시트 가져오기",
-          "markdownDescription": "체크하면 스프레드시트의 모든 시트를 가져옵니다. 체크하지 않으면 targetSheetNames 설정의 시트들만 가져옵니다.",
+          "description": "Fetch All Sheets / 모든 시트 가져오기",
+          "markdownDescription": "**English:** If checked, all sheets in the spreadsheet will be fetched. If unchecked, only the sheets specified in targetSheetNames will be fetched.\n\n**한국어:** 체크하면 스프레드시트의 모든 시트를 가져옵니다. 체크하지 않으면 targetSheetNames 설정의 시트들만 가져옵니다.",
           "order": 3
         },
         "languageHelper.targetSheetNames": {
           "type": "string",
           "default": "WD,ST,CD",
-          "description": "대상 시트 이름 목록 (쉼표로 구분)",
-          "markdownDescription": "가져올 시트 이름들을 **쉼표(,)로 구분**하여 입력하세요. 예: `WD,ST,CD`. 이 설정은 hover에서 추출할 코드 패턴(WD123, ST123 등)과도 연동됩니다. allSheetNames가 체크 해제되어 있을 때 사용됩니다.",
+          "description": "Target Sheet Names List (comma-separated) / 대상 시트 이름 목록 (쉼표로 구분)",
+          "markdownDescription": "**English:** Enter the sheet names to fetch, **separated by commas (,)**. Example: `WD,ST,CD`. This setting is also linked to code patterns (WD123, ST123, etc.) extracted in hover. Used when allSheetNames is unchecked.\n\n**한국어:** 가져올 시트 이름들을 **쉼표(,)로 구분**하여 입력하세요. 예: `WD,ST,CD`. 이 설정은 hover에서 추출할 코드 패턴(WD123, ST123 등)과도 연동됩니다. allSheetNames가 체크 해제되어 있을 때 사용됩니다.",
           "order": 4
         },
         "languageHelper.sheetUrl": {
           "type": "string",
           "default": "",
-          "description": "구글 스프레드시트 CSV URL (우선순위 2)",
-          "markdownDescription": "구글 스프레드시트 CSV URL을 입력하세요. API 키가 없을 때 사용됩니다. 구글 스프레드시트에서 **파일 > 공유 > 웹에 게시**에서 CSV 형식으로 게시한 URL을 입력합니다.",
+          "description": "Google Spreadsheet CSV URL (Priority 2) / 구글 스프레드시트 CSV URL (우선순위 2)",
+          "markdownDescription": "**English:** Enter the Google Spreadsheet CSV URL. This is used when no API key is provided. Enter the URL published in CSV format from **File > Share > Publish to web** in Google Spreadsheets.\n\n**한국어:** 구글 스프레드시트 CSV URL을 입력하세요. API 키가 없을 때 사용됩니다. 구글 스프레드시트에서 **파일 > 공유 > 웹에 게시**에서 CSV 형식으로 게시한 URL을 입력합니다.",
           "order": 6
         }
       }
