@@ -16,3 +16,9 @@ vsc-extension-quickstart.md
 **/eslint.config.mjs
 **/*.ts
 **/.vscode-test.*
+.idea/**
+.cursor/**
+**/*.vsix
+.eslintcache
+*.log
+.DS_Store
