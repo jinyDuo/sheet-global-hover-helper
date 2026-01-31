@@ -25,12 +25,12 @@ flowchart LR
     D --> E[키에 마우스 오버<br/>WD000001, ST000001 등]
     E --> F[Hover 팝업<br/>다국어 정보 표시]
     
-    style A fill:#e8f5e9
-    style B fill:#e1f5ff
-    style C fill:#f3e5f5
-    style D fill:#fff4e1
-    style E fill:#fff4e1
-    style F fill:#e8f5e9
+    style A fill:#c8e6c9,color:#000000
+    style B fill:#b3e5fc,color:#000000
+    style C fill:#e1bee7,color:#000000
+    style D fill:#ffe0b2,color:#000000
+    style E fill:#ffe0b2,color:#000000
+    style F fill:#c8e6c9,color:#000000
 ```
 
 ## 🚀 시작하기
@@ -86,9 +86,9 @@ flowchart TD
     D1 --> D2[2. VS Code 설정<br/>sheetUrl 입력]
     D2 --> E
     
-    style C fill:#e8f5e9
-    style D fill:#fff4e1
-    style E fill:#e1f5ff
+    style C fill:#c8e6c9,color:#000000
+    style D fill:#ffe0b2,color:#000000
+    style E fill:#b3e5fc,color:#000000
 ```
 
 ## 📖 사용 방법
@@ -116,11 +116,11 @@ flowchart LR
     E --> F[로컬 스토리지<br/>저장]
     F --> G[동기화 완료<br/>메시지 표시]
     
-    style A fill:#e1f5ff
-    style C fill:#e8f5e9
-    style D fill:#fff4e1
-    style F fill:#f3e5f5
-    style G fill:#e8f5e9
+    style A fill:#b3e5fc,color:#000000
+    style C fill:#c8e6c9,color:#000000
+    style D fill:#ffe0b2,color:#000000
+    style F fill:#e1bee7,color:#000000
+    style G fill:#c8e6c9,color:#000000
 ```
 
 ### Hover로 다국어 확인
@@ -155,11 +155,11 @@ flowchart TD
     
     F --> G[Hover 팝업 표시]
     
-    style A fill:#e1f5ff
-    style B fill:#fff4e1
-    style C fill:#f3e5f5
-    style F fill:#e8f5e9
-    style G fill:#e8f5e9
+    style A fill:#b3e5fc,color:#000000
+    style B fill:#ffe0b2,color:#000000
+    style C fill:#e1bee7,color:#000000
+    style F fill:#c8e6c9,color:#000000
+    style G fill:#c8e6c9,color:#000000
 ```
 
 ## ⚙️ 설정 항목
@@ -192,13 +192,13 @@ flowchart TD
     E --> F[로컬 스토리지 저장]
     F --> G[Hover에서 사용 가능]
     
-    style B fill:#fff4e1
-    style C fill:#e8f5e9
-    style D fill:#fff4e1
-    style C2 fill:#e1f5ff
-    style C3 fill:#e1f5ff
-    style F fill:#f3e5f5
-    style G fill:#e8f5e9
+    style B fill:#ffe0b2,color:#000000
+    style C fill:#c8e6c9,color:#000000
+    style D fill:#ffe0b2,color:#000000
+    style C2 fill:#b3e5fc,color:#000000
+    style C3 fill:#b3e5fc,color:#000000
+    style F fill:#e1bee7,color:#000000
+    style G fill:#c8e6c9,color:#000000
 ```
 
 **요약**:
@@ -278,11 +278,11 @@ flowchart TD
     H --> I[마켓플레이스 업로드]
     I --> J[배포 완료<br/>몇 분 후 반영]
     
-    style A fill:#fff4e1
-    style B fill:#e1f5ff
-    style C fill:#fff4e1
-    style F fill:#f3e5f5
-    style J fill:#e8f5e9
+    style A fill:#ffe0b2,color:#000000
+    style B fill:#b3e5fc,color:#000000
+    style C fill:#ffe0b2,color:#000000
+    style F fill:#e1bee7,color:#000000
+    style J fill:#c8e6c9,color:#000000
 ```
 
 ### 배포 명령어

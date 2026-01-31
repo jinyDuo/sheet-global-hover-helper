@@ -30,12 +30,12 @@ flowchart LR
     D --> E[Hover over Keys<br/>WD000001, ST000001, etc.]
     E --> F[Hover Popup<br/>Multilingual Info]
     
-    style A fill:#e8f5e9
-    style B fill:#e1f5ff
-    style C fill:#f3e5f5
-    style D fill:#fff4e1
-    style E fill:#fff4e1
-    style F fill:#e8f5e9
+    style A fill:#c8e6c9,color:#000000
+    style B fill:#b3e5fc,color:#000000
+    style C fill:#e1bee7,color:#000000
+    style D fill:#ffe0b2,color:#000000
+    style E fill:#ffe0b2,color:#000000
+    style F fill:#c8e6c9,color:#000000
 ```
 
 ## 🚀 Getting Started
@@ -91,9 +91,9 @@ flowchart TD
     D1 --> D2[2. VS Code Settings<br/>Enter sheetUrl]
     D2 --> E
     
-    style C fill:#e8f5e9
-    style D fill:#fff4e1
-    style E fill:#e1f5ff
+    style C fill:#c8e6c9,color:#000000
+    style D fill:#ffe0b2,color:#000000
+    style E fill:#b3e5fc,color:#000000
 ```
 
 ## 📖 Usage
@@ -121,11 +121,11 @@ flowchart LR
     E --> F[Local Storage<br/>Save]
     F --> G[Sync Complete<br/>Show Message]
     
-    style A fill:#e1f5ff
-    style C fill:#e8f5e9
-    style D fill:#fff4e1
-    style F fill:#f3e5f5
-    style G fill:#e8f5e9
+    style A fill:#b3e5fc,color:#000000
+    style C fill:#c8e6c9,color:#000000
+    style D fill:#ffe0b2,color:#000000
+    style F fill:#e1bee7,color:#000000
+    style G fill:#c8e6c9,color:#000000
 ```
 
 ### View Multilingual Info via Hover
@@ -160,11 +160,11 @@ flowchart TD
     
     F --> G[Show Hover Popup]
     
-    style A fill:#e1f5ff
-    style B fill:#fff4e1
-    style C fill:#f3e5f5
-    style F fill:#e8f5e9
-    style G fill:#e8f5e9
+    style A fill:#b3e5fc,color:#000000
+    style B fill:#ffe0b2,color:#000000
+    style C fill:#e1bee7,color:#000000
+    style F fill:#c8e6c9,color:#000000
+    style G fill:#c8e6c9,color:#000000
 ```
 
 ## ⚙️ Configuration
@@ -197,13 +197,13 @@ flowchart TD
     E --> F[Save to Local Storage]
     F --> G[Available for Hover]
     
-    style B fill:#fff4e1
-    style C fill:#e8f5e9
-    style D fill:#fff4e1
-    style C2 fill:#e1f5ff
-    style C3 fill:#e1f5ff
-    style F fill:#f3e5f5
-    style G fill:#e8f5e9
+    style B fill:#ffe0b2,color:#000000
+    style C fill:#c8e6c9,color:#000000
+    style D fill:#ffe0b2,color:#000000
+    style C2 fill:#b3e5fc,color:#000000
+    style C3 fill:#b3e5fc,color:#000000
+    style F fill:#e1bee7,color:#000000
+    style G fill:#c8e6c9,color:#000000
 ```
 
 **Summary**:
@@ -283,11 +283,11 @@ flowchart TD
     H --> I[Upload to Marketplace]
     I --> J[Deployment Complete<br/>Reflected in a few minutes]
     
-    style A fill:#fff4e1
-    style B fill:#e1f5ff
-    style C fill:#fff4e1
-    style F fill:#f3e5f5
-    style J fill:#e8f5e9
+    style A fill:#ffe0b2,color:#000000
+    style B fill:#b3e5fc,color:#000000
+    style C fill:#ffe0b2,color:#000000
+    style F fill:#e1bee7,color:#000000
+    style J fill:#c8e6c9,color:#000000
 ```
 
 ### Deployment Commands
