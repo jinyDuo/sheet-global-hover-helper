@@ -2,6 +2,11 @@
 
 구글 스프레드시트에서 다국어 데이터를 가져와 코드에서 hover로 확인할 수 있는 VS Code 익스텐션입니다.
 
+## 🔗 링크
+
+- 📦 [VS Code 마켓플레이스](https://marketplace.visualstudio.com/items?itemName=language-global-helper.lang-global-helper)
+- 💻 [GitHub 저장소](https://github.com/jinyDuo/colo-language-extension)
+
 ## ✨ 주요 기능
 
 - 📊 **구글 스프레드시트 연동**: Google Sheets API 또는 CSV URL을 통해 다국어 데이터 가져오기

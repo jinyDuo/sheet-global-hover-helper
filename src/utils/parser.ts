@@ -8,12 +8,16 @@ const hasCriticalErrors = (errors: ParseResult<any>['errors']): boolean => {
 	);
 };
 
-const createLanguageEntry = (row: any): { ko: string; en: string; ja: string } => {
-	return {
-		ko: row.ko || '',
-		en: row.en || '',
-		ja: row.ja || ''
-	};
+const createLanguageEntry = (row: any): Record<string, string> => {
+	const entry: Record<string, string> = {};
+	
+	Object.keys(row).forEach((key) => {
+		if (key.toLowerCase() !== 'key') {
+			entry[key] = row[key] || '';
+		}
+	});
+	
+	return entry;
 };
 
 const processRowToDictionary = (

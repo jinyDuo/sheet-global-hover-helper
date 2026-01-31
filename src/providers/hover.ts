@@ -85,6 +85,14 @@ export const provideHover = (
 		return null;
 	}
 
+	const languagesWithData = Object.keys(entry).filter(
+		(langCode) => entry[langCode] && entry[langCode].trim().length > 0
+	);
+	
+	if (languagesWithData.length === 0) {
+		return null;
+	}
+
 	const hoverContent = createHoverContent(code, entry);
 	return new vscode.Hover(hoverContent);
 };
