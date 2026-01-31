@@ -3,7 +3,7 @@
   "displayName": "Colo Language Helper",
   "description": "구글 스프레드시트에서 다국어 데이터를 가져와 코드에서 hover로 확인할 수 있는 익스텐션",
   "version": "0.0.1",
-  "publisher": "lang-global-helper",
+  "publisher": "language-global-helper",
   "engines": {
     "vscode": "^1.108.1"
   },
@@ -71,26 +71,29 @@
     "watch-tests": "tsc -p . -w --outDir out",
     "pretest": "pnpm run compile-tests && pnpm run compile && pnpm run lint",
     "lint": "eslint src",
-    "test": "vscode-test"
+    "test": "vscode-test",
+    "package:vsix": "vsce package",
+    "publish:vsix": "vsce publish"
   },
   "dependencies": {
     "axios": "^1.7.9",
     "papaparse": "^5.4.1"
   },
   "devDependencies": {
-    "@types/vscode": "^1.108.1",
     "@types/mocha": "^10.0.10",
     "@types/node": "22.x",
     "@types/papaparse": "^5.3.15",
-    "typescript-eslint": "^8.52.0",
-    "eslint": "^9.39.2",
-    "eslint-plugin-import": "^2.31.0",
-    "eslint-import-resolver-typescript": "^3.6.3",
-    "typescript": "^5.9.3",
-    "ts-loader": "^9.5.4",
-    "webpack": "^5.104.1",
-    "webpack-cli": "^6.0.1",
+    "@types/vscode": "^1.108.1",
     "@vscode/test-cli": "^0.0.12",
-    "@vscode/test-electron": "^2.5.2"
+    "@vscode/test-electron": "^2.5.2",
+    "@vscode/vsce": "^3.7.1",
+    "eslint": "^9.39.2",
+    "eslint-import-resolver-typescript": "^3.6.3",
+    "eslint-plugin-import": "^2.31.0",
+    "ts-loader": "^9.5.4",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.52.0",
+    "webpack": "^5.104.1",
+    "webpack-cli": "^6.0.1"
   }
 }

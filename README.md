@@ -921,6 +921,181 @@ src/
 - 코드에서 `WD`, `ST`, `CD`로 시작하는 키를 사용했는지 확인
 - TypeScript/JavaScript 파일에서 사용 중인지 확인
 
+## 📦 배포 가이드
+
+### 사전 준비
+
+1. **Azure DevOps 계정 생성**
+   - [Azure DevOps](https://dev.azure.com/) 접속
+   - Microsoft 계정으로 로그인 (없으면 생성)
+   - 조직(Organization) 생성
+
+2. **Personal Access Token (PAT) 생성**
+   - Azure DevOps 프로필 아이콘 클릭
+   - **Security** > **Personal access tokens** 선택
+   - **+ New Token** 클릭
+   - 설정:
+     - **Name**: `VS Code Extension Publishing` (원하는 이름)
+     - **Organization**: 생성한 조직 선택
+     - **Expiration**: 원하는 만료 기간 설정
+     - **Scopes**: **Custom defined** 선택
+     - **Marketplace** 섹션에서 **Manage** 권한 체크
+   - **Create** 클릭
+   - ⚠️ **토큰을 안전한 곳에 복사해두세요!** (다시 확인할 수 없습니다)
+
+### 배포 단계
+
+#### 1단계: vsce 도구 설치
+
+```bash
+# 전역 설치 (권장)
+pnpm add -g @vscode/vsce
+
+# 또는 프로젝트에 devDependency로 추가
+pnpm add -D @vscode/vsce
+```
+
+#### 2단계: package.json 확인
+
+배포 전에 `package.json`의 다음 항목을 확인하세요:
+
+- ✅ `name`: 익스텐션 ID (소문자, 하이픈만 사용)
+- ✅ `displayName`: 마켓플레이스에 표시될 이름
+- ✅ `version`: 버전 번호 (semver 형식: `major.minor.patch`)
+- ✅ `publisher`: 발행자 ID (Azure DevOps 조직 이름과 일치해야 함)
+- ✅ `description`: 익스텐션 설명
+- ✅ `repository`: GitHub 저장소 URL (선택사항, 있으면 좋음)
+
+현재 설정:
+```json
+{
+  "name": "lang-global-helper",
+  "displayName": "Colo Language Helper",
+  "version": "0.0.1",
+  "publisher": "lang-global-helper"
+}
+```
+
+> 💡 **주의**: `publisher`는 Azure DevOps 조직 이름과 일치해야 합니다. 다른 이름을 사용하려면 변경하세요.
+
+#### 3단계: 프로덕션 빌드
+
+```bash
+# 프로덕션 빌드 실행
+pnpm run package
+```
+
+빌드가 성공하면 `dist/extension.js` 파일이 생성됩니다.
+
+#### 4단계: 패키징 (VSIX 파일 생성)
+
+```bash
+# VSIX 파일 생성
+pnpm run package:vsix
+
+# 또는 직접 실행
+vsce package
+```
+
+성공하면 `lang-global-helper-0.0.1.vsix` 파일이 생성됩니다.
+
+#### 5단계: 배포
+
+**첫 배포 (새 익스텐션):**
+
+```bash
+# Personal Access Token을 사용하여 배포
+vsce publish -p <YOUR_PERSONAL_ACCESS_TOKEN>
+
+# 또는 환경 변수로 설정
+export VSCE_PAT=<YOUR_PERSONAL_ACCESS_TOKEN>
+vsce publish
+```
+
+**업데이트 배포 (기존 익스텐션):**
+
+1. `package.json`의 `version`을 업데이트 (예: `0.0.1` → `0.0.2`)
+2. 빌드 및 패키징:
+   ```bash
+   pnpm run package
+   pnpm run package:vsix
+   ```
+3. 배포:
+   ```bash
+   vsce publish -p <YOUR_PERSONAL_ACCESS_TOKEN>
+   ```
+
+### 배포 후 확인
+
+1. **VS Code 마켓플레이스 확인**
+   - [VS Code Marketplace](https://marketplace.visualstudio.com/vscode) 접속
+   - 익스텐션 이름으로 검색
+   - 배포 완료까지 몇 분 정도 소요될 수 있습니다
+
+2. **VS Code에서 설치 테스트**
+   - VS Code에서 `Ctrl + Shift + X` (또는 `Cmd + Shift + X`)
+   - 익스텐션 이름으로 검색
+   - 설치하여 정상 작동 확인
+
+### 배포 체크리스트
+
+배포 전 확인사항:
+
+- [ ] `package.json`의 모든 필수 필드가 올바르게 설정되어 있는가?
+- [ ] `version`이 이전 버전보다 높은가? (semver 형식)
+- [ ] 프로덕션 빌드가 성공적으로 완료되었는가?
+- [ ] `dist/extension.js` 파일이 생성되었는가?
+- [ ] `.vscodeignore`에 불필요한 파일이 제외되어 있는가?
+- [ ] Personal Access Token이 준비되어 있는가?
+- [ ] `publisher`가 Azure DevOps 조직 이름과 일치하는가?
+
+### 문제 해결
+
+#### "publisher not found" 오류
+
+- Azure DevOps에 해당 이름의 조직이 있는지 확인
+- `package.json`의 `publisher`를 Azure DevOps 조직 이름과 일치시킴
+
+#### "Extension with same name already exists" 오류
+
+- 다른 사용자가 이미 해당 이름을 사용 중
+- `package.json`의 `name`을 다른 이름으로 변경
+
+#### "Invalid Personal Access Token" 오류
+
+- 토큰이 만료되었는지 확인
+- 토큰에 **Marketplace > Manage** 권한이 있는지 확인
+- 새 토큰을 생성하여 다시 시도
+
+#### 배포 후 마켓플레이스에 표시되지 않음
+
+- 배포 완료까지 몇 분에서 몇 시간까지 소요될 수 있음
+- VS Code 마켓플레이스 웹사이트에서 직접 검색해보기
+- 익스텐션 ID로 직접 접근: `https://marketplace.visualstudio.com/items?itemName=<publisher>.<name>`
+
+### 로컬 설치 (테스트용)
+
+VSIX 파일을 직접 설치하여 테스트할 수 있습니다:
+
+```bash
+# VSIX 파일 생성
+pnpm run package:vsix
+
+# VS Code에서 설치
+code --install-extension lang-global-helper-0.0.1.vsix
+```
+
+### 버전 관리 전략
+
+- **Major (1.0.0)**: 호환되지 않는 변경사항
+- **Minor (0.1.0)**: 새로운 기능 추가 (하위 호환)
+- **Patch (0.0.1)**: 버그 수정 (하위 호환)
+
+예시:
+- `0.0.1` → `0.0.2`: 버그 수정
+- `0.0.2` → `0.1.0`: 새로운 기능 추가
+- `0.1.0` → `1.0.0`: 주요 변경사항
+
 ## 📄 라이선스
 
 MIT
