@@ -6,7 +6,8 @@
   "publisher": "language-global-helper",
   "icon": "global-hepler-logo.png",
   "engines": {
-    "vscode": "^1.108.1"
+    "vscode": "^1.108.1",
+    "node": ">=20.0.0"
   },
   "categories": [
     "Other"
