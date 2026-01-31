@@ -2,8 +2,9 @@
   "name": "lang-global-helper",
   "displayName": "Colo Language Helper",
   "description": "구글 스프레드시트에서 다국어 데이터를 가져와 코드에서 hover로 확인할 수 있는 익스텐션",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "language-global-helper",
+  "icon": "global-hepler-logo.png",
   "engines": {
     "vscode": "^1.108.1"
   },
@@ -66,13 +67,14 @@
     "vscode:prepublish": "pnpm run package",
     "compile": "webpack",
     "watch": "webpack --watch",
+    "build": "webpack --mode production --devtool hidden-source-map",
     "package": "webpack --mode production --devtool hidden-source-map",
     "compile-tests": "tsc -p . --outDir out",
     "watch-tests": "tsc -p . -w --outDir out",
     "pretest": "pnpm run compile-tests && pnpm run compile && pnpm run lint",
     "lint": "eslint src",
     "test": "vscode-test",
-    "package:vsix": "vsce package",
+    "package:vsix": "vsce package --no-dependencies",
     "publish:vsix": "vsce publish"
   },
   "dependencies": {
