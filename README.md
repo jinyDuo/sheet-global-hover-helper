@@ -1,4 +1,4 @@
-# Language Global Helper
+# Sheet Language Global Helper
 
 구글 스프레드시트에서 다국어 데이터를 가져와 코드에서 hover로 확인할 수 있는 VS Code 익스텐션입니다.
 
@@ -15,12 +15,12 @@
 ### 설치
 
 1. VS Code에서 `Ctrl + Shift + X` (또는 `Cmd + Shift + X` on Mac)로 익스텐션 마켓플레이스 열기
-2. "Language Global Helper" 검색
+2. "Sheet Language Global Helper" 검색
 3. 설치 클릭
 
 ### 설정
 
-VS Code에서 `Ctrl + ,` (또는 `Cmd + ,` on Mac)를 눌러 설정을 열고, 검색창에 "Language Global Helper"를 입력하세요.
+VS Code에서 `Ctrl + ,` (또는 `Cmd + ,` on Mac)를 눌러 설정을 열고, 검색창에 "Sheet Language Global Helper"를 입력하세요.
 
 #### 방법 1: Google Sheets API 사용 (권장)
 
@@ -50,7 +50,7 @@ VS Code에서 `Ctrl + ,` (또는 `Cmd + ,` on Mac)를 눌러 설정을 열고, �
 
 ### 데이터 동기화
 
-1. `Ctrl + Shift + P` → "Language Global Helper: Sheet Connect Sync" 실행
+1. `Ctrl + Shift + P` → "Sheet Language Global Helper: Sheet Connect Sync" 실행
 2. 동기화 완료 메시지 확인
 
 ### Hover로 다국어 확인

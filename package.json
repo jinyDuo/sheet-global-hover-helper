@@ -1,8 +1,8 @@
 {
   "name": "lang-global-helper",
-  "displayName": "Language Global Helper",
+  "displayName": "Sheet Language Global Helper",
   "description": "구글 스프레드시트에서 다국어 데이터를 가져와 코드에서 hover로 확인할 수 있는 익스텐션",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "publisher": "language-global-helper",
   "icon": "global-hepler-logo.png",
   "engines": {
@@ -18,7 +18,7 @@
   "main": "./dist/extension.js",
   "contributes": {
     "configuration": {
-      "title": "Language Global Helper",
+      "title": "Sheet Language Global Helper",
       "properties": {
         "languageHelper.sheetApiKey": {
           "type": "string",
@@ -60,7 +60,7 @@
     "commands": [
       {
         "command": "languageHelper.sync",
-        "title": "Language Global Helper: Sheet Connect Sync"
+        "title": "Sheet Language Global Helper: Sheet Connect Sync"
       }
     ]
   },
