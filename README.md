@@ -1,188 +1,335 @@
 # Sheet Language Global Helper
 
-구글 스프레드시트에서 다국어 데이터를 가져와 코드에서 hover로 확인할 수 있는 VS Code 익스텐션입니다.
+A VS Code extension that fetches multilingual data from Google Sheets and displays it via hover in your code.
 
-## 🔗 링크
+## 🌐 Languages
 
-- 📦 [VS Code 마켓플레이스](https://marketplace.visualstudio.com/items?itemName=language-global-helper.lang-global-helper)
-- 💻 [GitHub 저장소](https://github.com/jinyDuo/colo-language-extension)
+- [English](README.md) (Current)
+- [한국어 (Korean)](README.ko.md)
 
-## ✨ 주요 기능
+## 🔗 Links
 
-- 📊 **구글 스프레드시트 연동**: Google Sheets API 또는 CSV URL을 통해 다국어 데이터 가져오기
-- 🔍 **Hover 기능**: 코드에서 `WD`, `ST`, `CD`로 시작하는 키에 마우스를 올리면 다국어 정보 표시
-- 💾 **로컬 캐싱**: 데이터를 로컬 스토리지에 저장하여 오프라인에서도 사용 가능
-- 🔄 **수동 동기화**: 원할 때만 최신 데이터로 업데이트
-- 📝 **다중 시트 지원**: 여러 시트(WD, ST, CD 등)를 한 번에 가져오기
+- 📦 [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=language-global-helper.lang-global-helper)
+- 💻 [GitHub Repository](https://github.com/jinyDuo/colo-language-extension)
 
-## 🚀 시작하기
+## ✨ Features
 
-### 설치
+- 📊 **Google Sheets Integration**: Fetch multilingual data via Google Sheets API or CSV URL
+- 🔍 **Hover Feature**: Hover over keys starting with `WD`, `ST`, `CD` in your code to see multilingual information
+- 💾 **Local Caching**: Data is stored in local storage for offline use
+- 🔄 **Manual Sync**: Update to the latest data only when needed
+- 📝 **Multi-Sheet Support**: Fetch multiple sheets (WD, ST, CD, etc.) at once
 
-1. VS Code에서 `Ctrl + Shift + X` (또는 `Cmd + Shift + X` on Mac)로 익스텐션 마켓플레이스 열기
-2. "Sheet Language Global Helper" 검색
-3. 설치 클릭
+### Complete Workflow
 
-### 설정
-
-VS Code에서 `Ctrl + ,` (또는 `Cmd + ,` on Mac)를 눌러 설정을 열고, 검색창에 "Sheet Language Global Helper"를 입력하세요.
-
-#### 방법 1: Google Sheets API 사용 (권장)
-
-1. **API 키 발급**
-   - [Google Cloud Console](https://console.cloud.google.com/) 접속
-   - 프로젝트 생성 → API 및 서비스 > 라이브러리 → "Google Sheets API" 활성화
-   - API 및 서비스 > 사용자 인증 정보 > API 키 만들기
-
-2. **시트 공유 설정** ⚠️ 필수
-   - 구글 스프레드시트 우측 상단 **공유** 버튼 클릭
-   - **링크가 있는 모든 사용자** 선택, **뷰어** 권한 설정
-
-3. **VS Code 설정**
-   - **Sheet Api Key**: 발급받은 API 키 입력
-   - **Sheet Id**: 스프레드시트 URL에서 ID 추출 (또는 전체 URL 입력 시 자동 추출)
-   - **All Sheet Names**: 모든 시트 가져오기 (기본값: 체크됨)
-   - **Target Sheet Names**: 지정 시트만 가져오기 (예: `WD,ST,CD`)
-
-#### 방법 2: CSV URL 사용
-
-1. 구글 스프레드시트에서 **파일 > 공유 > 웹에 게시** → CSV 형식 선택
-2. 생성된 URL을 **Sheet Url**에 입력
-
-> 💡 **우선순위**: API 키가 있으면 API 사용, 없으면 CSV URL 사용
-
-## 📖 사용 방법
-
-### 데이터 동기화
-
-1. `Ctrl + Shift + P` → "Sheet Language Global Helper: Sheet Connect Sync" 실행
-2. 동기화 완료 메시지 확인
-
-### Hover로 다국어 확인
-
-코드에서 `targetSheetNames` 설정에 지정된 시트 이름으로 시작하는 키에 마우스를 올리면 다국어 정보가 표시됩니다:
-
-```typescript
-const code = "WD000001";  // 마우스 오버 시 다국어 표시
-getLang("ST000001");      // 함수 호출 내부도 감지
-t("CD000001");            // getLang, t, i18n, translate 등 지원
+```mermaid
+flowchart LR
+    A[Google Sheets] -->|API or CSV| B[Data Sync]
+    B --> C[Local Storage<br/>Save]
+    C --> D[Write Code<br/>in VS Code]
+    D --> E[Hover over Keys<br/>WD000001, ST000001, etc.]
+    E --> F[Hover Popup<br/>Multilingual Info]
+    
+    style A fill:#e8f5e9
+    style B fill:#e1f5ff
+    style C fill:#f3e5f5
+    style D fill:#fff4e1
+    style E fill:#fff4e1
+    style F fill:#e8f5e9
 ```
 
-**표시 정보**: 🇰🇷 KO, 🇺🇸 EN, 🇯🇵 JA
+## 🚀 Getting Started
 
-## ⚙️ 설정 항목
+### Installation
 
-| 설정 | 설명 | 필수 | 기본값 |
-|------|------|------|--------|
-| `sheetApiKey` | 구글 시트 API 키 | API 사용 시 | - |
-| `sheetId` | 스프레드시트 ID | 선택 | - |
-| `allSheetNames` | 모든 시트 가져오기 | 선택 | `true` |
-| `targetSheetNames` | 대상 시트 목록 (쉼표 구분) | 선택 | `WD,ST,CD` |
-| `sheetUrl` | CSV URL | CSV 사용 시 | - |
+1. Open VS Code Extensions Marketplace with `Ctrl + Shift + X` (or `Cmd + Shift + X` on Mac)
+2. Search for "Sheet Language Global Helper"
+3. Click Install
 
-### 동작 방식
+### Configuration
 
-- **API 키 있음**: Google Sheets API 사용
-  - `allSheetNames` 체크 → 모든 시트 가져오기
-  - `allSheetNames` 해제 → `targetSheetNames` 지정 시트만 가져오기
-- **API 키 없음**: CSV URL 사용 (단일 시트만 지원)
+Open VS Code settings with `Ctrl + ,` (or `Cmd + ,` on Mac) and search for "Sheet Language Global Helper".
 
-## 📝 스프레드시트 형식
+#### Method 1: Using Google Sheets API (Recommended)
+
+1. **Get API Key**
+   - Go to [Google Cloud Console](https://console.cloud.google.com/)
+   - Create a project → APIs & Services > Library → Enable "Google Sheets API"
+   - APIs & Services > Credentials > Create API Key
+
+2. **Share Sheet Settings** ⚠️ Required
+   - Open your Google Spreadsheet and click the **Share** button (top right)
+   - Select **Anyone with the link** and set permission to **Viewer**
+
+3. **VS Code Settings**
+   - **Sheet Api Key**: Enter your API key
+   - **Sheet Id**: Extract ID from spreadsheet URL (or enter full URL for auto-extraction)
+   - **All Sheet Names**: Fetch all sheets (default: checked)
+   - **Target Sheet Names**: Fetch only specified sheets (e.g., `WD,ST,CD`)
+
+#### Method 2: Using CSV URL
+
+1. In Google Spreadsheet, go to **File > Share > Publish to web** → Select CSV format
+2. Enter the generated URL in **Sheet Url**
+
+> 💡 **Priority**: If API key exists, API is used; otherwise, CSV URL is used.
+
+### Configuration Method Comparison
+
+```mermaid
+flowchart TD
+    A[Start Configuration] --> B{API Key Available?}
+    B -->|Yes| C[Method 1: Google Sheets API]
+    B -->|No| D[Method 2: CSV URL]
+    
+    C --> C1[1. Google Cloud Console<br/>Get API Key]
+    C1 --> C2[2. Share Sheet<br/>Anyone with the link]
+    C2 --> C3[3. VS Code Settings<br/>Enter sheetApiKey, sheetId]
+    C3 --> E[Run Sync]
+    
+    D --> D1[1. Google Sheet<br/>Publish to web as CSV]
+    D1 --> D2[2. VS Code Settings<br/>Enter sheetUrl]
+    D2 --> E
+    
+    style C fill:#e8f5e9
+    style D fill:#fff4e1
+    style E fill:#e1f5ff
+```
+
+## 📖 Usage
+
+### Data Synchronization
+
+1. Press `Ctrl + Shift + P` → Run "Sheet Language Global Helper: Sheet Connect Sync"
+2. Confirm the sync completion message
+
+#### Synchronization Process
+
+```mermaid
+flowchart LR
+    A[Run Command<br/>Ctrl+Shift+P] --> B{API Key Available?}
+    B -->|Yes| C[Google Sheets API<br/>Fetch Data]
+    B -->|No| D[CSV URL<br/>Fetch Data]
+    
+    C --> C1{allSheetNames<br/>Checked?}
+    C1 -->|Yes| C2[Fetch All Sheets]
+    C1 -->|No| C3[targetSheetNames<br/>Fetch Specified Sheets Only]
+    C2 --> E[Parse CSV]
+    C3 --> E
+    D --> E
+    
+    E --> F[Local Storage<br/>Save]
+    F --> G[Sync Complete<br/>Show Message]
+    
+    style A fill:#e1f5ff
+    style C fill:#e8f5e9
+    style D fill:#fff4e1
+    style F fill:#f3e5f5
+    style G fill:#e8f5e9
+```
+
+### View Multilingual Info via Hover
+
+Hover over keys starting with the sheet names specified in `targetSheetNames` to see multilingual information:
+
+```typescript
+const code = "WD000001";  // Shows multilingual info on hover
+getLang("ST000001");      // Also detects inside function calls
+t("CD000001");            // Supports getLang, t, i18n, translate, etc.
+```
+
+**Display Info**: 🇰🇷 KO, 🇺🇸 EN, 🇯🇵 JA
+
+#### Hover Example
+
+![Hover Example](hover-example.png)
+
+*Example: Hovering over `WD000527` displays multilingual translations (EN: Client, KO: 클라이언트)*
+
+#### How Hover Works
+
+```mermaid
+flowchart TD
+    A[Hover over Code] --> B{Pattern Match<br/>WD/ST/CD + Numbers}
+    B -->|Matched| C[Query Local Storage<br/>Data]
+    B -->|Not Matched| D[No Hover]
+    
+    C --> E{Data Exists?}
+    E -->|Yes| F[Display Multilingual Info<br/>🇰🇷 KO, 🇺🇸 EN, 🇯🇵 JA]
+    E -->|No| D
+    
+    F --> G[Show Hover Popup]
+    
+    style A fill:#e1f5ff
+    style B fill:#fff4e1
+    style C fill:#f3e5f5
+    style F fill:#e8f5e9
+    style G fill:#e8f5e9
+```
+
+## ⚙️ Configuration
+
+| Setting | Description | Required | Default |
+|---------|-------------|----------|---------|
+| `sheetApiKey` | Google Sheets API Key | When using API | - |
+| `sheetId` | Spreadsheet ID | Optional | - |
+| `allSheetNames` | Fetch all sheets | Optional | `true` |
+| `targetSheetNames` | Target sheet list (comma-separated) | Optional | `WD,ST,CD` |
+| `sheetUrl` | CSV URL | When using CSV | - |
+
+### How It Works
+
+```mermaid
+flowchart TD
+    A[Run Sync Command] --> B{API Key Configured?}
+    
+    B -->|Yes| C[Use Google Sheets API]
+    B -->|No| D[Use CSV URL]
+    
+    C --> C1{allSheetNames<br/>Checked?}
+    C1 -->|Yes| C2[Fetch All Sheets<br/>Auto Query Sheet List]
+    C1 -->|No| C3[targetSheetNames<br/>Fetch Specified Sheets Only<br/>e.g., WD,ST,CD]
+    
+    C2 --> E[Parse CSV Data]
+    C3 --> E
+    D --> E
+    
+    E --> F[Save to Local Storage]
+    F --> G[Available for Hover]
+    
+    style B fill:#fff4e1
+    style C fill:#e8f5e9
+    style D fill:#fff4e1
+    style C2 fill:#e1f5ff
+    style C3 fill:#e1f5ff
+    style F fill:#f3e5f5
+    style G fill:#e8f5e9
+```
+
+**Summary**:
+- **API Key Available**: Use Google Sheets API
+  - `allSheetNames` checked → Fetch all sheets
+  - `allSheetNames` unchecked → Fetch only sheets specified in `targetSheetNames`
+- **No API Key**: Use CSV URL (single sheet only)
+
+## 📝 Spreadsheet Format
 
 | key | ko | en | ja |
 |-----|----|----|----|
 | WD000001 | 안녕하세요 | Hello | こんにちは |
 | ST000001 | 감사합니다 | Thank you | ありがとう |
 
-- 첫 번째 행은 헤더로 사용
-- `key` 컬럼 필수, `ko`, `en`, `ja` 선택사항
+- First row is used as header
+- `key` column is required; `ko`, `en`, `ja` are optional
 
-## 🐛 문제 해결
+## 🐛 Troubleshooting
 
-### "API 키가 유효하지 않습니다"
-- Google Sheets API 활성화 확인
-- 시트가 "링크가 있는 모든 사용자"로 공유되어 있는지 확인
+### "API Key is Invalid"
+- Verify Google Sheets API is enabled
+- Check if the sheet is shared with "Anyone with the link"
 
-### "시트 ID가 잘못되었습니다"
-- 스프레드시트 URL에서 ID를 올바르게 추출했는지 확인
+### "Sheet ID is Incorrect"
+- Verify the ID is correctly extracted from the spreadsheet URL
 
-### Hover가 작동하지 않음
-- 데이터 동기화를 먼저 실행했는지 확인
-- 코드에서 `WD`, `ST`, `CD`로 시작하는 키를 사용했는지 확인
+### Hover Not Working
+- Make sure data synchronization has been run first
+- Verify you're using keys starting with `WD`, `ST`, `CD` in your code
 
-## 🛠️ 개발
+## 🛠️ Development
 
-### 필수 요구사항
+### Requirements
 
-- **Node.js 20.x 이상** (필수)
-- pnpm (또는 npm)
+- **Node.js 20.x or higher** (Required)
+- pnpm (or npm)
 
-### 설치 및 빌드
+### Installation and Build
 
 ```bash
-# 의존성 설치
+# Install dependencies
 pnpm install
 
-# 개발 모드 (watch)
+# Development mode (watch)
 pnpm run watch
 
-# 프로덕션 빌드
+# Production build
 pnpm run build
 ```
 
-### 테스트
+### Testing
 
-1. `F5` 키로 Extension Development Host 실행
-2. 새 창에서 테스트 파일 생성
-3. `WD000001` 같은 코드에 마우스 오버하여 확인
+1. Press `F5` to run Extension Development Host
+2. Create a test file in the new window
+3. Hover over codes like `WD000001` to verify
 
-## 📦 배포
+## 📦 Deployment
 
-### 사전 준비
+### Prerequisites
 
-1. [Azure DevOps](https://dev.azure.com/)에서 계정/조직 생성
-2. Personal Access Token 생성 (Marketplace > Manage 권한 필요)
+1. Create account/organization on [Azure DevOps](https://dev.azure.com/)
+2. Generate Personal Access Token (Marketplace > Manage permission required)
 
-### 배포 명령어
+### Deployment Process
+
+```mermaid
+flowchart TD
+    A[Modify Code] --> B[Update package.json<br/>version]
+    B --> C[pnpm run build<br/>Production Build]
+    C --> D{Build Success?}
+    D -->|Failed| E[Fix Errors]
+    E --> C
+    D -->|Success| F[vsce publish<br/>--no-dependencies]
+    F --> G[Enter Personal Access Token]
+    G --> H[VSIX Packaging<br/>Auto Execute]
+    H --> I[Upload to Marketplace]
+    I --> J[Deployment Complete<br/>Reflected in a few minutes]
+    
+    style A fill:#fff4e1
+    style B fill:#e1f5ff
+    style C fill:#fff4e1
+    style F fill:#f3e5f5
+    style J fill:#e8f5e9
+```
+
+### Deployment Commands
 
 ```bash
-# 1. vsce 설치
+# 1. Install vsce
 pnpm add -g @vscode/vsce
 
-# 2. 빌드
+# 2. Build
 pnpm run build
 
-# 3. VSIX 패키징
+# 3. Package VSIX
 pnpm run package:vsix
 
-# 4. 배포 (의존성 체크 건너뛰기)
+# 4. Deploy (skip dependency check)
 vsce publish --no-dependencies -p <YOUR_PERSONAL_ACCESS_TOKEN>
 ```
 
-### 업데이트 배포
+### Update Deployment
 
-⚠️ **중요**: 코드 수정 후 재배포 시 반드시 `package.json`의 `version`을 올려야 합니다.
+⚠️ **Important**: You must increment the `version` in `package.json` before redeploying after code changes.
 
 ```bash
-# 1. package.json에서 version 업데이트 (예: 0.0.1 → 0.0.2)
-# 2. 빌드 및 배포
+# 1. Update version in package.json (e.g., 0.0.1 → 0.0.2)
+# 2. Build and deploy
 pnpm run build
 vsce publish --no-dependencies -p <TOKEN>
 ```
 
-### 아이콘 적용
+### Apply Icon
 
-1. 루트 폴더에 `icon.png` 추가 (128x128 권장)
-2. `package.json`에 `"icon": "icon.png"` 추가
-3. 버전 업데이트 후 재배포
+1. Add `icon.png` to root folder (128x128 recommended)
+2. Add `"icon": "icon.png"` to `package.json`
+3. Update version and redeploy
 
-## 📄 라이선스
+## 📄 License
 
 MIT
 
-## 🤝 기여
+## 🤝 Contributing
 
-이슈 및 풀 리퀘스트를 환영합니다!
+Issues and pull requests are welcome!
 
 ---
 
