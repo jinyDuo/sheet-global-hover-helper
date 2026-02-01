@@ -16,6 +16,7 @@ A VS Code extension that fetches multilingual data from Google Sheets and displa
 
 - 📊 **Google Sheets Integration**: Fetch multilingual data via Google Sheets API or CSV URL
 - 🔍 **Hover Feature**: Hover over keys starting with `WD`, `ST`, `CD` in your code to see multilingual information
+- 🏷️ **Inline Translation (Inlay Hints)**: Show translations inline next to keys and translation calls (no hover needed)
 - 💾 **Local Caching**: Data is stored in local storage for offline use
 - 🔄 **Manual Sync**: Update to the latest data only when needed
 - 📝 **Multi-Sheet Support**: Fetch multiple sheets (WD, ST, CD, etc.) at once
@@ -130,7 +131,7 @@ flowchart LR
 
 ### View Multilingual Info via Hover
 
-Hover over keys starting with the sheet names specified in `targetSheetNames` to see multilingual information:
+Hover over keys matching the patterns specified in `hoverKeyPatterns` to see multilingual information:
 
 ```typescript
 const code = "WD000001";  // Shows multilingual info on hover
@@ -167,6 +168,21 @@ flowchart TD
     style G fill:#c8e6c9,color:#000000
 ```
 
+### Show Inline Translation (Inlay Hints)
+
+After running sync, translations can be displayed inline (without hover) as inlay hints:
+
+```typescript
+t("WD000001");         // → Hello (based on inlineTranslationLanguage)
+t("프로그램 등록");      // → Program Registration (if your sheet key is the Korean text)
+```
+
+#### Inlay Hints Example
+
+![Inlay Hints Example](inline-hint-example.png)
+
+> Note: Inlay hints are refreshed automatically after sync and when related settings change.
+
 ## ⚙️ Configuration
 
 | Setting | Description | Required | Default |
@@ -175,6 +191,9 @@ flowchart TD
 | `sheetId` | Spreadsheet ID | Optional | - |
 | `allSheetNames` | Fetch all sheets | Optional | `true` |
 | `targetSheetNames` | Target sheet list (comma-separated) | Optional | `WD,ST,CD` |
+| `hoverKeyPatterns` | Hover/Hint key patterns (comma-separated). Used to detect codes like `WD123`, `ST123`. | Optional | `WD,ST,CD` |
+| `showInlineTranslation` | Show inline translation as inlay hints | Optional | `true` |
+| `inlineTranslationLanguage` | Language to display for inline translation (dropdown: `ko`, `en`, `ja`, etc.) | Optional | `ko` |
 | `sheetUrl` | CSV URL | When using CSV | - |
 
 ### How It Works

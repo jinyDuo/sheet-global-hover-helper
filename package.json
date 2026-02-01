@@ -2,7 +2,7 @@
   "name": "lang-global-helper",
   "displayName": "Sheet Language Global Helper",
   "description": "An extension that fetches multilingual data from Google Spreadsheets and displays it on hover in code",
-  "version": "0.0.10",
+  "version": "0.0.14",
   "publisher": "language-global-helper",
   "icon": "global-hepler-logo.png",
   "repository": {
@@ -53,6 +53,26 @@
           "markdownDescription": "**English:** Enter the sheet names to fetch from the spreadsheet, **separated by commas (,)**. Example: `WD,ST,CD`. Used when allSheetNames is unchecked.\n\n**한국어:** 스프레드시트에서 가져올 시트 이름들을 **쉼표(,)로 구분**하여 입력하세요. 예: `WD,ST,CD`. allSheetNames가 체크 해제되어 있을 때 사용됩니다.",
           "order": 4
         },
+        "languageHelper.inlineTranslationLanguage": {
+          "type": "string",
+          "enum": ["ko", "en", "ja", "zh", "es", "fr", "de", "pt", "ru", "it"],
+          "enumDescriptions": [
+            "Korean / 한국어",
+            "English / 영어",
+            "Japanese / 일본어",
+            "Chinese / 중국어",
+            "Spanish / 스페인어",
+            "French / 프랑스어",
+            "German / 독일어",
+            "Portuguese / 포르투갈어",
+            "Russian / 러시아어",
+            "Italian / 이탈리아어"
+          ],
+          "default": "ko",
+          "description": "Inline Translation Language / 인라인 번역 언어",
+          "markdownDescription": "**English:** Select the language to display in inline translations. Default is `ko`.\n\n**한국어:** 인라인 번역에 표시할 언어를 선택하세요. 기본값은 `ko`입니다.",
+          "order": 7
+        },
         "languageHelper.hoverKeyPatterns": {
           "type": "string",
           "default": "WD,ST,CD",
@@ -60,6 +80,14 @@
           "markdownDescription": "**English:** Enter the key patterns to detect in hover, **separated by commas (,)**. Example: `WD,ST,CD,MS,BT`. These patterns are used to extract codes like WD123, ST123, etc. from your code. Default is `WD,ST,CD`.\n\n**한국어:** 호버에서 감지할 키 패턴을 **쉼표(,)로 구분**하여 입력하세요. 예: `WD,ST,CD,MS,BT`. 이 패턴들은 코드에서 WD123, ST123 등의 코드를 추출하는데 사용됩니다. 기본값은 `WD,ST,CD`입니다.",
           "order": 5
         },
+        "languageHelper.showInlineTranslation": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show Inline Translation / 인라인 번역 표시",
+          "markdownDescription": "**English:** If enabled, translations will be displayed inline next to the code (e.g., `WD123 → English text`). If disabled, translations will only appear on hover.\n\n**한국어:** 활성화하면 코드 옆에 인라인으로 번역이 표시됩니다 (예: `WD123 → 영어 텍스트`). 비활성화하면 호버 시에만 번역이 표시됩니다.",
+          "order": 6
+        },
+
         "languageHelper.sheetUrl": {
           "type": "string",
           "default": "",

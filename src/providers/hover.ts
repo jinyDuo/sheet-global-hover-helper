@@ -1,16 +1,8 @@
 import * as vscode from 'vscode';
-import { DEFAULT_HOVER_KEY_PATTERNS } from '../constants';
+import { KOREAN_CHARACTER_PATTERN, STRING_LITERAL_PATTERN, TRANSLATION_FUNCTION_PATTERN } from '../constants';
 import type { LanguageDictionary } from '../types';
-import { createCodePattern } from '../utils/codePatternExtractor';
+import { getCodePattern } from '../utils/codePatternHelper';
 import { createHoverContent } from '../utils/markdown';
-import { parseSheetNames } from '../utils/sheetNameParser';
-
-const getCodePattern = (): RegExp => {
-	const config = vscode.workspace.getConfiguration('languageHelper');
-	const hoverKeyPatternsConfig = config.get<string>('hoverKeyPatterns') || DEFAULT_HOVER_KEY_PATTERNS;
-	const keyPatterns = parseSheetNames(hoverKeyPatternsConfig);
-	return createCodePattern(keyPatterns);
-};
 
 const extractCodeFromPosition = (
 	document: vscode.TextDocument,
@@ -38,8 +30,8 @@ const extractCodeFromStringLiteral = (
 	const lineText = line.text;
 
 	const stringPatterns = [
-		/(?:getLang|t|i18n|translate|lang)\(['"`]([^'"`]+)['"`]\)/g,
-		/['"`]([^'"`]+)['"`]/g
+		TRANSLATION_FUNCTION_PATTERN,
+		STRING_LITERAL_PATTERN
 	];
 
 	for (const stringPattern of stringPatterns) {
@@ -62,6 +54,30 @@ const extractCodeFromStringLiteral = (
 	return null;
 };
 
+const extractKoreanStringFromPosition = (
+	document: vscode.TextDocument,
+	position: vscode.Position
+): string | null => {
+	const line = document.lineAt(position.line);
+	const lineText = line.text;
+
+	let match;
+	while ((match = TRANSLATION_FUNCTION_PATTERN.exec(lineText)) !== null) {
+		const stringValue = match[1];
+		
+		if (KOREAN_CHARACTER_PATTERN.test(stringValue)) {
+			const matchStart = match.index + match[0].indexOf(stringValue);
+			const matchEnd = matchStart + stringValue.length;
+			
+			if (position.character >= matchStart && position.character <= matchEnd) {
+				return stringValue.trim();
+			}
+		}
+	}
+
+	return null;
+};
+
 export const provideHover = (
 	document: vscode.TextDocument,
 	position: vscode.Position,
@@ -75,6 +91,10 @@ export const provideHover = (
 	
 	if (!code) {
 		code = extractCodeFromStringLiteral(document, position, pattern);
+	}
+
+	if (!code) {
+		code = extractKoreanStringFromPosition(document, position);
 	}
 
 	if (!code) {

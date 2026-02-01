@@ -11,6 +11,7 @@
 
 - 📊 **구글 스프레드시트 연동**: Google Sheets API 또는 CSV URL을 통해 다국어 데이터 가져오기
 - 🔍 **Hover 기능**: 코드에서 `WD`, `ST`, `CD`로 시작하는 키에 마우스를 올리면 다국어 정보 표시
+- 🏷️ **인라인 번역(인레이 힌트)**: 호버 없이 코드 옆에 번역을 바로 표시
 - 💾 **로컬 캐싱**: 데이터를 로컬 스토리지에 저장하여 오프라인에서도 사용 가능
 - 🔄 **수동 동기화**: 원할 때만 최신 데이터로 업데이트
 - 📝 **다중 시트 지원**: 여러 시트(WD, ST, CD 등)를 한 번에 가져오기
@@ -125,7 +126,7 @@ flowchart LR
 
 ### Hover로 다국어 확인
 
-코드에서 `targetSheetNames` 설정에 지정된 시트 이름으로 시작하는 키에 마우스를 올리면 다국어 정보가 표시됩니다:
+코드에서 `hoverKeyPatterns` 설정에 지정된 패턴과 매칭되는 키에 마우스를 올리면 다국어 정보가 표시됩니다:
 
 ```typescript
 const code = "WD000001";  // 마우스 오버 시 다국어 표시
@@ -162,6 +163,21 @@ flowchart TD
     style G fill:#c8e6c9,color:#000000
 ```
 
+### 인라인 번역(인레이 힌트)로 바로 보기
+
+동기화를 실행한 뒤, 호버 없이도 코드 옆에 번역이 인라인(인레이 힌트)로 표시됩니다:
+
+```typescript
+t("WD000001");        // → 안녕하세요 (inlineTranslationLanguage 기준)
+t("프로그램 등록");     // → Program Registration (시트 key가 한글 문자열인 경우)
+```
+
+#### 인레이 힌트 예시
+
+![인레이 힌트 예시](inline-hint-example.png)
+
+> 참고: 인레이 힌트는 sync 이후 및 관련 설정 변경 시 자동으로 갱신됩니다.
+
 ## ⚙️ 설정 항목
 
 | 설정 | 설명 | 필수 | 기본값 |
@@ -170,6 +186,9 @@ flowchart TD
 | `sheetId` | 스프레드시트 ID | 선택 | - |
 | `allSheetNames` | 모든 시트 가져오기 | 선택 | `true` |
 | `targetSheetNames` | 대상 시트 목록 (쉼표 구분) | 선택 | `WD,ST,CD` |
+| `hoverKeyPatterns` | Hover/힌트에서 감지할 키 패턴 (쉼표 구분). `WD123`, `ST123` 같은 코드를 추출할 때 사용 | 선택 | `WD,ST,CD` |
+| `showInlineTranslation` | 인라인 번역(인레이 힌트) 표시 여부 | 선택 | `true` |
+| `inlineTranslationLanguage` | 인라인 번역 표시 언어 (드롭다운: `ko`, `en`, `ja` 등) | 선택 | `ko` |
 | `sheetUrl` | CSV URL | CSV 사용 시 | - |
 
 ### 동작 방식
