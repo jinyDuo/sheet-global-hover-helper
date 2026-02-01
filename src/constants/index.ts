@@ -1,0 +1,3 @@
+export const DEFAULT_HOVER_KEY_PATTERNS = 'WD,ST,CD';
+export const DEFAULT_TARGET_SHEET_NAMES = 'WD,ST,CD';
+export const DEFAULT_CODE_PATTERN_REGEX = /(WD|ST|CD)\d+/;

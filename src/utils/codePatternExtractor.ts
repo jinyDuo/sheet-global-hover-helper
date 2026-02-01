@@ -1,6 +1,8 @@
+import { DEFAULT_CODE_PATTERN_REGEX } from '../constants';
+
 export const createCodePattern = (sheetNames: string[]): RegExp => {
 	if (sheetNames.length === 0) {
-		return /(WD|ST|CD)\d+/;
+		return DEFAULT_CODE_PATTERN_REGEX;
 	}
 
 	const pattern = sheetNames

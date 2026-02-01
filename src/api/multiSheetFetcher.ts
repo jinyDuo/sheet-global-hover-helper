@@ -1,6 +1,6 @@
 import axios from 'axios';
 import type { GoogleSheetsApiResponse } from '../types';
-import { padRowToMatchHeader } from './csvHelper';
+import { padRowToMatchHeader } from '../utils/csvHelper';
 import { createSheetError } from './errorHandler';
 
 const fetchSingleSheet = async (

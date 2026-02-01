@@ -1,10 +1,11 @@
 import * as vscode from 'vscode';
+import { fetchDictionaryData } from '../api/fetcher';
+import { fetchMultipleSheetsByApi } from '../api/multiSheetFetcher';
+import { fetchAllSheetNames } from '../api/sheetListFetcher';
+import { DEFAULT_TARGET_SHEET_NAMES } from '../constants';
 import type { LanguageDictionary } from '../types';
-import { fetchDictionaryData } from '../utils/fetcher';
-import { fetchMultipleSheetsByApi } from '../utils/multiSheetFetcher';
 import { parseCsvToDictionary } from '../utils/parser';
 import { extractSheetIdFromUrl } from '../utils/sheetIdExtractor';
-import { fetchAllSheetNames } from '../utils/sheetListFetcher';
 import { parseSheetNames } from '../utils/sheetNameParser';
 
 const resolveSheetId = (
@@ -51,7 +52,7 @@ const fetchCsvDataByApi = async (
 	
 	if (sheetNames.length === 0) {
 		throw new Error(
-			'targetSheetNames 설정에 시트 이름을 쉼표(,)로 구분하여 입력해주세요. 예: WD,ST,CD'
+			`targetSheetNames 설정에 시트 이름을 쉼표(,)로 구분하여 입력해주세요. 예: ${DEFAULT_TARGET_SHEET_NAMES}`
 		);
 	}
 
@@ -114,7 +115,7 @@ export const syncLanguageData = async (
 	const sheetApiKey = config.get<string>('sheetApiKey');
 	const sheetId = config.get<string>('sheetId');
 	const isAllSheetNames = config.get<boolean>('allSheetNames') ?? true;
-	const targetSheetNamesConfig = config.get<string>('targetSheetNames') || 'WD,ST,CD';
+	const targetSheetNamesConfig = config.get<string>('targetSheetNames') || DEFAULT_TARGET_SHEET_NAMES;
 	const sheetUrl = config.get<string>('sheetUrl');
 
 	if (!sheetApiKey && !sheetUrl) {

@@ -13,6 +13,3 @@ export const fetchDictionaryData = async (url: string): Promise<string> => {
 		throw handleApiError(error);
 	}
 };
-
-
-

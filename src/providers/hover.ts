@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { DEFAULT_HOVER_KEY_PATTERNS } from '../constants';
 import type { LanguageDictionary } from '../types';
 import { createCodePattern } from '../utils/codePatternExtractor';
 import { createHoverContent } from '../utils/markdown';
@@ -6,9 +7,9 @@ import { parseSheetNames } from '../utils/sheetNameParser';
 
 const getCodePattern = (): RegExp => {
 	const config = vscode.workspace.getConfiguration('languageHelper');
-	const targetSheetNamesConfig = config.get<string>('targetSheetNames') || 'WD,ST,CD';
-	const sheetNames = parseSheetNames(targetSheetNamesConfig);
-	return createCodePattern(sheetNames);
+	const hoverKeyPatternsConfig = config.get<string>('hoverKeyPatterns') || DEFAULT_HOVER_KEY_PATTERNS;
+	const keyPatterns = parseSheetNames(hoverKeyPatternsConfig);
+	return createCodePattern(keyPatterns);
 };
 
 const extractCodeFromPosition = (

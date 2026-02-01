@@ -1,6 +1,6 @@
 import axios from 'axios';
 import type { GoogleSheetsApiResponse } from '../types';
-import { padRowToMatchHeader } from './csvHelper';
+import { padRowToMatchHeader } from '../utils/csvHelper';
 import { handleApiError } from './errorHandler';
 
 const convertRowsToCsv = (rows: string[][]): string => {
