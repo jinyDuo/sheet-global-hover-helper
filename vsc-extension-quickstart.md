@@ -103,7 +103,7 @@ npm install
   "icon": "icon.png",                        // 아이콘 파일 (128x128 권장)
   "main": "./dist/extension.js",             // 빌드된 엔트리 포인트
   "engines": {
-    "vscode": "^1.108.1",                   // 최소 VS Code 버전
+    "vscode": "^1.100.0",                   // 최소 VS Code 버전
     "node": ">=20.0.0"                       // Node.js 버전 요구사항
   },
   "repository": {                            // GitHub 저장소 (선택사항이지만 권장)
