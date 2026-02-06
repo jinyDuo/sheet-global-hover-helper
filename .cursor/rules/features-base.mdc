@@ -1,0 +1,55 @@
+---
+description: Features-base 도메인 구조 규칙. 기능 단위로 디렉터리를 나누고, 공통 코드는 shared에 둔다.
+globs: src/**/*
+alwaysApply: false
+---
+
+# Features-Base 도메인 구조
+
+## 원칙
+
+- **도메인(기능) 단위**로 `src/features/<feature-name>/` 아래에 코드를 둔다.
+- 여러 기능에서 쓰는 타입·상수·유틸은 **`src/shared/`** 에만 둔다.
+- 레이어(api, providers, services)보다 **기능 단위**를 우선한다.
+
+## 디렉터리 구조
+
+```
+src/
+  extension.ts              # 진입점, features/shared만 참조
+  features/
+    sheet-api/              # 시트 데이터 가져오기 (API·JSON·CSV·인증)
+    hover/                  # 호버 표시
+    inline-hints/           # 인라인 번역 힌트
+    sync/                   # 동기화 명령 및 플로우
+  shared/
+    constants/
+    types/
+    utils/
+  test/
+```
+
+## features/ 규칙
+
+- 한 feature는 **한 도메인(사용자 관점 기능)** 에 대응한다.
+- feature 내부는 필요 시 하위 폴더로 나눈다 (예: `sheet-api/api/`, `sheet-api/auth/`).
+- **다른 feature** 는 `shared/` 또는 **다른 feature의 public API** 만 참조한다.
+- feature 간 직접 참조는 최소화하고, 공통 로직은 `shared/` 로 올린다.
+
+## shared/ 규칙
+
+- **constants**: 전역 상수
+- **types**: 전역 타입·인터페이스
+- **utils**: 도메인 무관 유틸 (파서, CSV, 패턴, URL 추출 등)
+- feature 전용 타입/유틸은 해당 feature 안에 둔다.
+
+## import 규칙
+
+- `extension.ts`: `./features/*`, `./shared/*` 만 import
+- feature 내부: `../shared/*` 또는 상대 경로로 feature 내부 모듈
+- **shared에서는 features를 import 하지 않는다.**
+
+## 네이밍
+
+- feature 폴더명: **kebab-case** (예: `inline-hints`, `sheet-api`)
+- feature 내 파일명: 기존 프로젝트 규칙 유지 (camelCase 또는 해당 규칙)
