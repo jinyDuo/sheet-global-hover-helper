@@ -51,6 +51,20 @@ flowchart LR
 
 Open VS Code settings with `Ctrl + ,` (or `Cmd + ,` on Mac) and search for "Sheet Language Global Helper".
 
+**If hint-related settings (Show Inline Translation, Inline Translation Language, Hover Key Patterns) do not appear:**
+
+1. **Scroll down** in the extension settings — they may be below the sheet/API options.
+2. **Search** for `inline` or `hoverKey` in the settings search box to jump to them.
+3. **Add manually** — `Cmd + Shift + P` → "Open User Settings (JSON)", then add:
+
+```json
+"languageHelper.showInlineTranslation": true,
+"languageHelper.inlineTranslationLanguage": "ko",
+"languageHelper.hoverKeyPatterns": "WD,ST,CD"
+```
+
+Also ensure **Editor: Inlay Hints** is set to `on` in VS Code settings so inline hints are visible.
+
 #### Method 1: Using Google Sheets API (Recommended)
 
 1. **Get API Key**

@@ -2,7 +2,7 @@
   "name": "lang-global-helper",
   "displayName": "Sheet Language Global Helper",
   "description": "An extension that fetches multilingual data from Google Spreadsheets and displays it on hover in code",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "publisher": "language-global-helper",
   "icon": "global-hepler-logo.png",
   "repository": {
@@ -25,37 +25,41 @@
     "configuration": {
       "title": "Sheet Language Global Helper",
       "properties": {
+        "languageHelper.sheetServiceAccountJson": {
+          "type": "string",
+          "default": "",
+          "description": "Google Service Account JSON (Priority 1) / 구글 서비스 계정 JSON (우선순위 1)",
+          "markdownDescription": "**English:** Paste the full content of the service account JSON key file (from Google Cloud Console → IAM → Service Accounts → Keys). Used instead of API Key for authentication. The spreadsheet must be shared with the service account email.\n\n**한국어:** 구글 클라우드 콘솔에서 발급한 서비스 계정 키 JSON 파일 내용 전체를 붙여넣으세요. API 키 대신 사용됩니다. 스프레드시트를 서비스 계정 이메일과 공유해야 합니다.",
+          "order": 1
+        },
         "languageHelper.sheetApiKey": {
           "type": "string",
           "default": "",
-          "description": "Google Sheets API Key (Priority 1) / 구글 시트 API 키 (우선순위 1)",
-          "markdownDescription": "**English:** Enter your Google Sheets API key. If an API key is provided, it will be used. Otherwise, the CSV URL will be used.\n\n**한국어:** 구글 시트 API 키를 입력하세요. API 키가 있으면 API를 사용하고, 없으면 CSV URL을 사용합니다.",
-          "order": 1
-        },
-        "languageHelper.sheetId": {
-          "type": "string",
-          "default": "",
-          "description": "Google Spreadsheet ID (Optional) / 구글 스프레드시트 ID (선택사항)",
-          "markdownDescription": "**English:** Enter the Google Spreadsheet ID. If left empty, it will be automatically extracted from sheetUrl. Example: `https://docs.google.com/spreadsheets/d/{SPREADSHEET_ID}/edit`\n\n**⚠️ Required Permission Settings:**\n- Open the Google Spreadsheet and click the **Share** button in the top right\n- Set to **Anyone with the link**\n- Set permission to **Viewer**\n- Without this setting, data cannot be fetched via API\n\n**한국어:** 구글 스프레드시트 ID를 입력하세요. 비어있으면 sheetUrl에서 자동으로 추출합니다. 예: `https://docs.google.com/spreadsheets/d/{SPREADSHEET_ID}/edit`\n\n**⚠️ 필수 권한 설정:**\n- 구글 스프레드시트를 열고 우측 상단 **공유** 버튼 클릭\n- **링크가 있는 모든 사용자**로 설정\n- **뷰어** 권한으로 설정\n- 이 설정이 없으면 API로 데이터를 가져올 수 없습니다",
+          "description": "Google Sheets API Key (Priority 2) / 구글 시트 API 키 (우선순위 2)",
+          "markdownDescription": "**English:** Enter your Google Sheets API key. Used when service account JSON is not set. If an API key is provided, it will be used. Otherwise, JSON URL or CSV URL will be used.\n\n**한국어:** 구글 시트 API 키를 입력하세요. 서비스 계정 JSON이 없을 때 사용합니다. API 키가 있으면 API를 사용하고, 없으면 JSON URL 또는 CSV URL을 사용합니다.",
           "order": 2
         },
-        "languageHelper.allSheetNames": {
+        "languageHelper.showInlineTranslation": {
           "type": "boolean",
           "default": true,
-          "description": "Fetch All Sheets / 모든 시트 가져오기",
-          "markdownDescription": "**English:** If checked, all sheets in the spreadsheet will be fetched. If unchecked, only the sheets specified in targetSheetNames will be fetched.\n\n**한국어:** 체크하면 스프레드시트의 모든 시트를 가져옵니다. 체크하지 않으면 targetSheetNames 설정의 시트들만 가져옵니다.",
-          "order": 3
-        },
-        "languageHelper.targetSheetNames": {
-          "type": "string",
-          "default": "WD,ST,CD",
-          "description": "Target Sheet Names List (comma-separated) / 대상 시트 이름 목록 (쉼표로 구분)",
-          "markdownDescription": "**English:** Enter the sheet names to fetch from the spreadsheet, **separated by commas (,)**. Example: `WD,ST,CD`. Used when allSheetNames is unchecked.\n\n**한국어:** 스프레드시트에서 가져올 시트 이름들을 **쉼표(,)로 구분**하여 입력하세요. 예: `WD,ST,CD`. allSheetNames가 체크 해제되어 있을 때 사용됩니다.",
-          "order": 4
+          "description": "Show Inline Translation / 인라인 번역 표시",
+          "markdownDescription": "**English:** If enabled, translations will be displayed inline next to the code (e.g., `WD123 → English text`). If disabled, translations will only appear on hover. If hints do not appear, ensure **Editor: Inlay Hints** is set to `on` in VS Code settings.\n\n**한국어:** 활성화하면 코드 옆에 인라인으로 번역이 표시됩니다. 힌트가 안 보이면 VS Code 설정에서 **Editor: Inlay Hints** 를 `on` 으로 두세요.",
+          "order": 2
         },
         "languageHelper.inlineTranslationLanguage": {
           "type": "string",
-          "enum": ["ko", "en", "ja", "zh", "es", "fr", "de", "pt", "ru", "it"],
+          "enum": [
+            "ko",
+            "en",
+            "ja",
+            "zh",
+            "es",
+            "fr",
+            "de",
+            "pt",
+            "ru",
+            "it"
+          ],
           "enumDescriptions": [
             "Korean / 한국어",
             "English / 영어",
@@ -71,31 +75,54 @@
           "default": "ko",
           "description": "Inline Translation Language / 인라인 번역 언어",
           "markdownDescription": "**English:** Select the language to display in inline translations. Default is `ko`.\n\n**한국어:** 인라인 번역에 표시할 언어를 선택하세요. 기본값은 `ko`입니다.",
-          "order": 7
+          "order": 3
         },
         "languageHelper.hoverKeyPatterns": {
           "type": "string",
           "default": "WD,ST,CD",
           "description": "Hover Key Patterns (comma-separated) / 호버 키 패턴 (쉼표로 구분)",
           "markdownDescription": "**English:** Enter the key patterns to detect in hover, **separated by commas (,)**. Example: `WD,ST,CD,MS,BT`. These patterns are used to extract codes like WD123, ST123, etc. from your code. Default is `WD,ST,CD`.\n\n**한국어:** 호버에서 감지할 키 패턴을 **쉼표(,)로 구분**하여 입력하세요. 예: `WD,ST,CD,MS,BT`. 이 패턴들은 코드에서 WD123, ST123 등의 코드를 추출하는데 사용됩니다. 기본값은 `WD,ST,CD`입니다.",
+          "order": 4
+        },
+        "languageHelper.sheetId": {
+          "type": "string",
+          "default": "",
+          "description": "Google Spreadsheet ID (Optional) / 구글 스프레드시트 ID (선택사항)",
+          "markdownDescription": "**English:** Enter the Google Spreadsheet ID. If left empty, it will be automatically extracted from sheetUrl. Example: `https://docs.google.com/spreadsheets/d/{SPREADSHEET_ID}/edit`\n\n**⚠️ Required Permission Settings:**\n- Open the Google Spreadsheet and click the **Share** button in the top right\n- Set to **Anyone with the link**\n- Set permission to **Viewer**\n- Without this setting, data cannot be fetched via API\n\n**한국어:** 구글 스프레드시트 ID를 입력하세요. 비어있으면 sheetUrl에서 자동으로 추출합니다. 예: `https://docs.google.com/spreadsheets/d/{SPREADSHEET_ID}/edit`\n\n**⚠️ 필수 권한 설정:**\n- 구글 스프레드시트를 열고 우측 상단 **공유** 버튼 클릭\n- **링크가 있는 모든 사용자**로 설정\n- **뷰어** 권한으로 설정\n- 이 설정이 없으면 API로 데이터를 가져올 수 없습니다",
           "order": 5
         },
-        "languageHelper.showInlineTranslation": {
+        "languageHelper.allSheetNames": {
           "type": "boolean",
           "default": true,
-          "description": "Show Inline Translation / 인라인 번역 표시",
-          "markdownDescription": "**English:** If enabled, translations will be displayed inline next to the code (e.g., `WD123 → English text`). If disabled, translations will only appear on hover.\n\n**한국어:** 활성화하면 코드 옆에 인라인으로 번역이 표시됩니다 (예: `WD123 → 영어 텍스트`). 비활성화하면 호버 시에만 번역이 표시됩니다.",
+          "description": "Fetch All Sheets / 모든 시트 가져오기",
+          "markdownDescription": "**English:** If checked, all sheets in the spreadsheet will be fetched. If unchecked, only the sheets specified in targetSheetNames will be fetched.\n\n**한국어:** 체크하면 스프레드시트의 모든 시트를 가져옵니다. 체크하지 않으면 targetSheetNames 설정의 시트들만 가져옵니다.",
           "order": 6
         },
-
+        "languageHelper.targetSheetNames": {
+          "type": "string",
+          "default": "WD,ST,CD",
+          "description": "Target Sheet Names List (comma-separated) / 대상 시트 이름 목록 (쉼표로 구분)",
+          "markdownDescription": "**English:** Enter the sheet names to fetch from the spreadsheet, **separated by commas (,)**. Example: `WD,ST,CD`. Used when allSheetNames is unchecked.\n\n**한국어:** 스프레드시트에서 가져올 시트 이름들을 **쉼표(,)로 구분**하여 입력하세요. 예: `WD,ST,CD`. allSheetNames가 체크 해제되어 있을 때 사용됩니다.",
+          "order": 7
+        },
+        "languageHelper.sheetJsonUrl": {
+          "type": "string",
+          "default": "",
+          "description": "Sheet JSON API URL (Priority 2) / 시트 JSON API URL (우선순위 2)",
+          "markdownDescription": "**English:** URL that returns JSON (alternative to API Key). Used when no API key is set. Response must be an array of `{ key, ko, en, ... }` or an object `{ \"WD001\": { \"ko\": \"...\", \"en\": \"...\" }, ... }`.\n\n**한국어:** JSON을 반환하는 URL (API 키 대안). API 키가 없을 때 사용합니다. 응답은 `[{ key, ko, en, ... }]` 배열 또는 `{ \"WD001\": { \"ko\": \"...\", \"en\": \"...\" }, ... }` 형태여야 합니다.",
+          "order": 8
+        },
         "languageHelper.sheetUrl": {
           "type": "string",
           "default": "",
-          "description": "Google Spreadsheet CSV URL (Priority 2) / 구글 스프레드시트 CSV URL (우선순위 2)",
-          "markdownDescription": "**English:** Enter the Google Spreadsheet CSV URL. This is used when no API key is provided. Enter the URL published in CSV format from **File > Share > Publish to web** in Google Spreadsheets.\n\n**한국어:** 구글 스프레드시트 CSV URL을 입력하세요. API 키가 없을 때 사용됩니다. 구글 스프레드시트에서 **파일 > 공유 > 웹에 게시**에서 CSV 형식으로 게시한 URL을 입력합니다.",
-          "order": 6
+          "description": "Google Spreadsheet CSV URL (Priority 3) / 구글 스프레드시트 CSV URL (우선순위 3)",
+          "markdownDescription": "**English:** Enter the Google Spreadsheet CSV URL. Used when no API key or JSON URL is set. Enter the URL published in CSV format from **File > Share > Publish to web** in Google Spreadsheets.\n\n**한국어:** 구글 스프레드시트 CSV URL을 입력하세요. API 키·JSON URL이 없을 때 사용됩니다. 구글 스프레드시트에서 **파일 > 공유 > 웹에 게시**에서 CSV 형식으로 게시한 URL을 입력합니다.",
+          "order": 9
         }
       }
+    },
+    "configurationDefaults": {
+      "editor.inlayHints.enabled": "on"
     },
     "commands": [
       {
@@ -120,6 +147,7 @@
   },
   "dependencies": {
     "axios": "^1.7.9",
+    "google-auth-library": "^10.5.0",
     "papaparse": "^5.4.1"
   },
   "devDependencies": {

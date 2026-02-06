@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 import * as vscode from 'vscode';
-import { provideHover } from '../providers/hover';
-import type { LanguageDictionary } from '../types';
+import { provideHover } from '../features/hover/hover';
+import type { LanguageDictionary } from '../shared/types';
 
 suite('Hover Provider Test Suite', () => {
 	const createTestDocument = async (

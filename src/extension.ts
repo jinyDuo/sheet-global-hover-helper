@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
-import { provideHover } from './providers/hover';
-import { provideInlineHints } from './providers/inlineHints';
-import { syncLanguageData } from './services/sync';
-import type { LanguageDictionary } from './types';
+import { provideHover } from './features/hover/hover';
+import { provideInlineHints } from './features/inline-hints/inlineHints';
+import { syncLanguageData } from './features/sync/sync';
+import type { LanguageDictionary } from './shared/types';
 
 export const activate = (context: vscode.ExtensionContext): void => {
 	let languageDictionary: LanguageDictionary = context.globalState.get<LanguageDictionary>('langData', {});

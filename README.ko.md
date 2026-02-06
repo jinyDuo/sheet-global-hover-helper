@@ -46,6 +46,20 @@ flowchart LR
 
 VS Code에서 `Ctrl + ,` (또는 `Cmd + ,` on Mac)를 눌러 설정을 열고, 검색창에 "Sheet Language Global Helper"를 입력하세요.
 
+**인라인 번역/힌트 관련 설정(Show Inline Translation, Inline Translation Language, Hover Key Patterns)이 목록에 안 보일 때:**
+
+1. **아래로 스크롤** — 시트/API 설정 아래에 있을 수 있습니다.
+2. **검색** — 설정 검색창에 `inline` 또는 `hoverKey`를 입력해 해당 항목으로 이동해 보세요.
+3. **수동 추가** — `Cmd + Shift + P` → "Open User Settings (JSON)" 실행 후 아래를 추가하세요.
+
+```json
+"languageHelper.showInlineTranslation": true,
+"languageHelper.inlineTranslationLanguage": "ko",
+"languageHelper.hoverKeyPatterns": "WD,ST,CD"
+```
+
+인라인 힌트가 보이려면 VS Code 설정에서 **Editor: Inlay Hints** 가 `on` 인지 확인하세요.
+
 #### 방법 1: Google Sheets API 사용 (권장)
 
 1. **API 키 발급**
