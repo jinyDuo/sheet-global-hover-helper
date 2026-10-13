@@ -2,12 +2,12 @@
   "name": "lang-global-helper",
   "displayName": "Sheet Language Global Helper",
   "description": "An extension that fetches multilingual data from Google Spreadsheets and displays it on hover in code",
-  "version": "0.0.28",
+  "version": "0.0.31",
   "publisher": "language-global-helper",
   "icon": "global-hepler-logo.png",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jinyDuo/colo-language-extension.git"
+    "url": "https://github.com/jinyDuo/sheet-global-hover-helper.git"
   },
   "license": "MIT",
   "engines": {
@@ -105,7 +105,7 @@
           "type": "string",
           "default": "",
           "description": "Google Spreadsheet ID (Optional) / 구글 스프레드시트 ID (선택사항)",
-          "markdownDescription": "**English:** Enter the Google Spreadsheet ID. If left empty, it will be automatically extracted from sheetUrl. Example: `https://docs.google.com/spreadsheets/d/{SPREADSHEET_ID}/edit`\n\n**⚠️ Required Permission Settings:**\n- Open the Google Spreadsheet and click the **Share** button in the top right\n- Set to **Anyone with the link**\n- Set permission to **Viewer**\n- Without this setting, data cannot be fetched via API\n\n**한국어:** 구글 스프레드시트 ID를 입력하세요. 비어있으면 sheetUrl에서 자동으로 추출합니다. 예: `https://docs.google.com/spreadsheets/d/{SPREADSHEET_ID}/edit`\n\n**⚠️ 필수 권한 설정:**\n- 구글 스프레드시트를 열고 우측 상단 **공유** 버튼 클릭\n- **링크가 있는 모든 사용자**로 설정\n- **뷰어** 권한으로 설정\n- 이 설정이 없으면 API로 데이터를 가져올 수 없습니다",
+          "markdownDescription": "**English:** Spreadsheet ID, or leave empty to extract it from sheetUrl. For service accounts, share the sheet with the service account email. For API keys, enable link-viewer access.\n\n**한국어:** 스프레드시트 ID입니다. 비우면 sheetUrl에서 추출합니다. 서비스 계정 사용 시 해당 이메일에 시트를 공유하고, API 키 사용 시 링크가 있는 사용자의 보기 권한을 설정하세요.",
           "order": 6
         },
         "languageHelper.allSheetNames": {
@@ -126,7 +126,7 @@
           "type": "string",
           "default": "",
           "description": "Sheet JSON API URL (Priority 2) / 시트 JSON API URL (우선순위 2)",
-          "markdownDescription": "**English:** URL that returns JSON (alternative to API Key). Used when no API key is set. Response may include `ja` and/or `jp` for Japanese; missing one is mirrored from the other on sync.\n\n**한국어:** JSON을 반환하는 URL (API 키 대안). API 키가 없을 때 사용합니다. 일본어는 `ja`·`jp` 열을 모두 사용할 수 있으며, 한쪽만 있으면 동기화 시 다른 키에도 같은 값이 채워집니다.",
+          "markdownDescription": "**English:** JSON URL used when neither service account nor API key is configured. Japanese fields must match `japaneseLanguageCode` (`ja` by default). Only the selected Japanese field is stored; values are not mirrored.\n\n**한국어:** 서비스 계정과 API 키가 없을 때 사용하는 JSON URL입니다. 일본어 필드는 `japaneseLanguageCode` 설정(기본 `ja`)과 일치해야 합니다. 선택한 일본어 필드만 저장하며 다른 필드로 복제하지 않습니다.",
           "order": 9
         },
         "languageHelper.sheetUrl": {
@@ -136,11 +136,18 @@
           "markdownDescription": "**English:** Enter the Google Spreadsheet CSV URL. Used when no API key or JSON URL is set. Enter the URL published in CSV format from **File > Share > Publish to web** in Google Spreadsheets.\n\n**한국어:** 구글 스프레드시트 CSV URL을 입력하세요. API 키·JSON URL이 없을 때 사용됩니다. 구글 스프레드시트에서 **파일 > 공유 > 웹에 게시**에서 CSV 형식으로 게시한 URL을 입력합니다.",
           "order": 10
         },
+        "languageHelper.exportAllLanguageJson": {
+          "type": "boolean",
+          "default": true,
+          "description": "Export all_language.json / all_language.json 내보내기",
+          "markdownDescription": "**English:** Include `all_language.json` when exporting JSON. Enabled by default. Uncheck to export only per-prefix files. Existing `all_language.json` files are left untouched.\n\n**한국어:** JSON 보내기 시 `all_language.json`을 생성합니다. 기본값은 활성화이며, 체크를 해제하면 접두사별 파일만 내보냅니다. 기존 `all_language.json` 파일은 수정하거나 삭제하지 않습니다.",
+          "order": 12
+        },
         "languageHelper.workspaceExportJsonPath": {
           "type": "string",
           "default": "",
           "description": "Folder for JSON export (matched keys only). Required. / JSON보내기 폴더 (접두 매칭 키만). 필수.",
-          "markdownDescription": "**English:** Folder under the **first workspace root**. Writes **`all_language.json`** (only keys matching **Target Sheet Names** prefixes) and one **`{prefix}_lang.json`** per configured prefix. Keys that match no prefix are **not** exported. **Required** — empty → error. **Example:** `language` → `{root}/language/…`. No `..` / absolute paths.\n\n**한국어:** **첫 워크스페이스 루트** 기준 폴더. **`targetSheetNames`** 접두에 맞는 키만 **`all_language.json`**과 **`{접두사}_lang.json`**에 저장합니다. 접두에 안 맞는 키는 보내지 않습니다. **비우면 오류.** **예:** `language`. `..`·절대 경로 불가.",
+          "markdownDescription": "**English:** Folder under the **first workspace root**. Writes **`all_language.json`** when **Export All Language Json** is enabled (only keys matching **Target Sheet Names** prefixes) and one **`{prefix}_lang.json`** per configured prefix. Keys that match no prefix are **not** exported. **Required** — empty → error. **Example:** `language` → `{root}/language/…`. No `..` / absolute paths.\n\n**한국어:** **첫 워크스페이스 루트** 기준 폴더. **`targetSheetNames`** 접두에 맞는 키만 **`{접두사}_lang.json`**에 저장하며, **Export All Language Json**이 켜져 있으면 **`all_language.json`**도 저장합니다. 접두에 안 맞는 키는 보내지 않습니다. **비우면 오류.** **예:** `language`. `..`·절대 경로 불가.",
           "order": 11
         }
       }

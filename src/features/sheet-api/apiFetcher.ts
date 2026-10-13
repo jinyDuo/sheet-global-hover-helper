@@ -1,20 +1,8 @@
 import axios from 'axios';
+import { buildSheetsRequestConfig } from './sheetsRequestConfig';
 import type { GoogleSheetsApiResponse, SheetsCredential } from '../../shared/sheet-data/types';
 import { padRowToMatchHeader, rowToCsvLine } from '../../shared/sheet-data/utils/csvHelper';
 import { handleApiError } from './errorHandler';
-
-const buildSheetsRequestConfig = (credential: SheetsCredential) => {
-	if (credential.type === 'oauth') {
-		return {
-			urlSuffix: '',
-			headers: { Authorization: `Bearer ${credential.accessToken}` }
-		};
-	}
-	return {
-		urlSuffix: `?key=${credential.apiKey}`,
-		headers: {}
-	};
-};
 
 const convertRowsToCsv = (rows: string[][]): string => {
 	if (rows.length === 0) {
@@ -43,11 +31,10 @@ export const fetchDictionaryDataByApi = async (
 ): Promise<string> => {
 	const range = sheetName ? `${sheetName}!A:Z` : 'A:Z';
 	const baseUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}`;
-	const { urlSuffix, headers } = buildSheetsRequestConfig(credential);
-	const url = `${baseUrl}${urlSuffix}`;
+	const requestConfig = buildSheetsRequestConfig(credential);
 
 	try {
-		const response = await axios.get<GoogleSheetsApiResponse>(url, { headers });
+		const response = await axios.get<GoogleSheetsApiResponse>(baseUrl, requestConfig);
 
 		if (response.data.error) {
 			throw new Error(

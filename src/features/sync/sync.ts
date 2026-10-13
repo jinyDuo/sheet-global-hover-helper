@@ -81,14 +81,6 @@ const fetchCsvDataByApi = async (
 	return { csvData: mergedCsv, sheetTabFetchSummaries };
 };
 
-const fetchCsvDataByUrl = async (sheetUrl: string): Promise<string> => {
-	if (!sheetUrl) {
-		throw new Error('CSV URL을 입력해주세요!');
-	}
-
-	return await fetchDictionaryData(sheetUrl);
-};
-
 const fetchCsvDataBySheetsApi = async (
 	credential: SheetsCredential,
 	sheetId: string | undefined,
@@ -114,7 +106,7 @@ const fetchCsvDataBySheetsApi = async (
 
 export type SyncLanguageDataOptions = {
 	/**
-	 * When true: no green “동기화 완료” toast, and no toast for missing remote config / incomplete API setup
+	 * When true: no green “동기화 완료” toast; errors are still reported
 	 * (used when Export runs the same fetch pipeline immediately before writing JSON).
 	 */
 	suppressSuccessToast?: boolean;
@@ -192,24 +184,15 @@ export const syncLanguageData = async (
 	syncOptions?: SyncLanguageDataOptions
 ): Promise<LanguageDictionary> => {
 	const config = vscode.workspace.getConfiguration('languageHelper');
-	const sheetServiceAccountJson = config.get<string>('sheetServiceAccountJson');
-	const sheetApiKey = config.get<string>('sheetApiKey');
+	const sheetServiceAccountJson = config.get<string>('sheetServiceAccountJson', '').trim();
+	const sheetApiKey = config.get<string>('sheetApiKey', '').trim();
 	const sheetId = config.get<string>('sheetId');
 	const isAllSheetNames = config.get<boolean>('allSheetNames') ?? true;
 	const targetSheetNamesConfig = config.get<string>('targetSheetNames') || DEFAULT_TARGET_SHEET_NAMES;
-	const sheetJsonUrl = config.get<string>('sheetJsonUrl');
-	const sheetUrl = config.get<string>('sheetUrl');
+	const sheetJsonUrl = config.get<string>('sheetJsonUrl', '').trim();
+	const sheetUrl = config.get<string>('sheetUrl', '').trim();
 
-	const useSheetsApi = (sheetServiceAccountJson?.trim() ?? '') !== '' || (sheetApiKey?.trim() ?? '') !== '';
-
-	if (!useSheetsApi && !sheetJsonUrl && !sheetUrl) {
-		if (!syncOptions?.suppressSuccessToast) {
-			vscode.window.showErrorMessage(
-				'설정창에서 서비스 계정 JSON, 구글 시트 API 키, JSON API URL, 또는 CSV URL 중 하나를 입력해주세요!'
-			);
-		}
-		return languageDictionary;
-	}
+	const isSheetsApi = sheetServiceAccountJson !== '' || sheetApiKey !== '';
 
 	const expectedJapaneseColumn = resolveJapaneseLanguageCodeFromSetting(
 		config.get<string>('japaneseLanguageCode')
@@ -218,18 +201,17 @@ export const syncLanguageData = async (
 	let isLangDataResetForRemoteFetch = false;
 
 	try {
-		if (useSheetsApi) {
+		if (!isSheetsApi && !sheetJsonUrl && !sheetUrl) {
+			throw new Error('설정창에서 서비스 계정 JSON, 구글 시트 API 키, JSON API URL, 또는 CSV URL 중 하나를 입력해주세요!');
+		}
+
+		if (isSheetsApi) {
 			let credential: SheetsCredential;
-			if (sheetServiceAccountJson?.trim()) {
+			if (sheetServiceAccountJson) {
 				const accessToken = await getAccessTokenFromServiceAccountJson(sheetServiceAccountJson);
 				credential = { type: 'oauth', accessToken };
-			} else if (sheetApiKey?.trim()) {
-				credential = { type: 'apiKey', apiKey: sheetApiKey.trim() };
 			} else {
-				if (!syncOptions?.suppressSuccessToast) {
-					vscode.window.showErrorMessage('서비스 계정 JSON 또는 API 키를 입력해주세요.');
-				}
-				return languageDictionary;
+				credential = { type: 'apiKey', apiKey: sheetApiKey };
 			}
 			await resetLangDataGlobalState(context);
 			isLangDataResetForRemoteFetch = true;
@@ -251,7 +233,7 @@ export const syncLanguageData = async (
 			);
 		}
 
-		if (sheetJsonUrl?.trim()) {
+		if (sheetJsonUrl) {
 			await resetLangDataGlobalState(context);
 			isLangDataResetForRemoteFetch = true;
 			const freshDictionary = await fetchDictionaryFromJsonUrl(sheetJsonUrl, {
@@ -261,13 +243,9 @@ export const syncLanguageData = async (
 			return freshDictionary;
 		}
 
-		const trimmedCsvUrl = (sheetUrl ?? '').trim();
-		if (!trimmedCsvUrl) {
-			throw new Error('CSV URL을 입력해주세요!');
-		}
 		await resetLangDataGlobalState(context);
 		isLangDataResetForRemoteFetch = true;
-		const csvData = await fetchCsvDataByUrl(trimmedCsvUrl);
+		const csvData = await fetchDictionaryData(sheetUrl);
 		return await saveDictionaryAndShowMessage(
 			context,
 			csvData,

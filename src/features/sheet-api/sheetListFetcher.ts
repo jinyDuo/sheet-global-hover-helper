@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { buildSheetsRequestConfig } from './sheetsRequestConfig';
 import type { SheetsCredential } from '../../shared/sheet-data/types';
 import { handleApiError } from './errorHandler';
 
@@ -17,25 +18,16 @@ type SpreadsheetMetadata = {
 	};
 };
 
-const FIELDS_PARAM = 'fields=sheets.properties.title';
-
-const buildSheetsRequestConfig = (credential: SheetsCredential) => {
-	if (credential.type === 'oauth') {
-		return { urlSuffix: `?${FIELDS_PARAM}`, headers: { Authorization: `Bearer ${credential.accessToken}` } };
-	}
-	return { urlSuffix: `?${FIELDS_PARAM}&key=${credential.apiKey}`, headers: {} };
-};
-
 export const fetchAllSheetNames = async (
 	credential: SheetsCredential,
 	sheetId: string
 ): Promise<string[]> => {
 	const baseUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}`;
-	const { urlSuffix, headers } = buildSheetsRequestConfig(credential);
-	const url = `${baseUrl}${urlSuffix}`;
+	const requestConfig = buildSheetsRequestConfig(credential);
+	requestConfig.params.fields = 'sheets.properties.title';
 
 	try {
-		const response = await axios.get<SpreadsheetMetadata>(url, { headers });
+		const response = await axios.get<SpreadsheetMetadata>(baseUrl, requestConfig);
 
 		if (response.data.error) {
 			throw new Error(

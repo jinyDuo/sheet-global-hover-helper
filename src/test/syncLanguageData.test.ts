@@ -49,6 +49,33 @@ const createInMemoryExtensionContext = (): vscode.ExtensionContext => {
 };
 
 suite('syncLanguageData — Export와 동일한 시트 반영 파이프라인', () => {
+	for (const missingSource of ['', '   ']) {
+		test(`원격 소스가 ${JSON.stringify(missingSource)}이면 Export는 실패하고 일반 Sync는 캐시를 보존한다`, async () => {
+			const snapshot = readLanguageHelperSnapshot();
+			try {
+				const config = vscode.workspace.getConfiguration(CONFIG_SECTION);
+				for (const key of ['sheetServiceAccountJson', 'sheetApiKey', 'sheetJsonUrl', 'sheetUrl']) {
+					await config.update(key, missingSource, vscode.ConfigurationTarget.Global);
+				}
+				const context = createInMemoryExtensionContext();
+				const cachedDictionary: LanguageDictionary = { WD001: { ko: '기존 번역' } };
+				await context.globalState.update('langData', cachedDictionary);
+
+				await assert.rejects(
+					syncLanguageData(context, cachedDictionary, {
+						suppressSuccessToast: true,
+						throwOnFetchFailure: true
+					}),
+					/CSV URL 중 하나를 입력해주세요/
+				);
+				assert.deepStrictEqual(context.globalState.get('langData'), cachedDictionary);
+				assert.deepStrictEqual(await syncLanguageData(context, cachedDictionary), cachedDictionary);
+			} finally {
+				await restoreLanguageHelperSnapshot(snapshot);
+			}
+		});
+	}
+
 	test('JSON URL 응답이면 메모리에 있던 옛 사전을 덮어쓴 값을 반환하고 globalState에 동일하게 저장한다', async () => {
 		const snapshot = readLanguageHelperSnapshot();
 		const originalGet = axios.get;

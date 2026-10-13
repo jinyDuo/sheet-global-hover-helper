@@ -22,3 +22,4 @@ vsc-extension-quickstart.md
 .eslintcache
 *.log
 .DS_Store
+.claude/**

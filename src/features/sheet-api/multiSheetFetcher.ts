@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { buildSheetsRequestConfig } from './sheetsRequestConfig';
 import type {
 	GoogleSheetsApiResponse,
 	SheetTabFetchSummary,
@@ -7,13 +8,6 @@ import type {
 import { padRowToMatchHeader, rowToCsvLine } from '../../shared/sheet-data/utils/csvHelper';
 import { createSheetError } from './errorHandler';
 
-const buildSheetsRequestConfig = (credential: SheetsCredential) => {
-	if (credential.type === 'oauth') {
-		return { urlSuffix: '', headers: { Authorization: `Bearer ${credential.accessToken}` } };
-	}
-	return { urlSuffix: `?key=${credential.apiKey}`, headers: {} };
-};
-
 const fetchSingleSheet = async (
 	credential: SheetsCredential,
 	sheetId: string,
@@ -21,11 +15,10 @@ const fetchSingleSheet = async (
 ): Promise<string[][]> => {
 	const range = `${sheetName}!A:Z`;
 	const baseUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}`;
-	const { urlSuffix, headers } = buildSheetsRequestConfig(credential);
-	const url = `${baseUrl}${urlSuffix}`;
+	const requestConfig = buildSheetsRequestConfig(credential);
 
 	try {
-		const response = await axios.get<GoogleSheetsApiResponse>(url, { headers });
+		const response = await axios.get<GoogleSheetsApiResponse>(baseUrl, requestConfig);
 
 		if (response.data.error) {
 			throw new Error(

@@ -15,8 +15,7 @@ export const resolveJapaneseLanguageCodeFromSetting = (
 export const resolveSheetLanguageCodeItems = (
 	expectedJapanese: JapaneseSheetLanguageCode
 ): readonly string[] => {
-	const japaneseKey = expectedJapanese === 'ja' ? 'ja' : 'jp';
-	return ['ko', 'en', japaneseKey, ...SHEET_LANGUAGE_TAIL_CODE_ITEMS];
+	return ['ko', 'en', expectedJapanese, ...SHEET_LANGUAGE_TAIL_CODE_ITEMS];
 };
 
 /** Default list for tests / filter fallback; matches `DEFAULT_JAPANESE_LANGUAGE_CODE`. */

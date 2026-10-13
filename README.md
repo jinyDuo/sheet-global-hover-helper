@@ -10,7 +10,7 @@ A VS Code extension that fetches multilingual data from Google Sheets and displa
 ## 🔗 Links
 
 - 📦 [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=language-global-helper.lang-global-helper)
-- 💻 [GitHub Repository](https://github.com/jinyDuo/colo-language-extension)
+- 💻 [GitHub Repository](https://github.com/jinyDuo/sheet-global-hover-helper)
 
 ## ✨ Features
 
@@ -105,7 +105,7 @@ Also ensure **Editor: Inlay Hints** is set to `on` in VS Code settings so inline
 1. In Google Spreadsheet, go to **File > Share > Publish to web** → Select CSV format
 2. **Sheet Url**: Enter the generated CSV URL
 
-> 💡 **Priority**: Service Account JSON → API Key or JSON URL → CSV URL. The first one you configure is used.
+> 💡 **Priority**: Service Account JSON → API Key → JSON URL → CSV URL. The highest-priority configured source is used.
 
 ### Configuration Method Comparison
 
@@ -144,7 +144,7 @@ Open the Command Palette (`Ctrl + Shift + P` / `Cmd + Shift + P`) and run:
 | Command | What it does |
 |---------|----------------|
 | **Sheet Language Global Helper: Sheet Connect Sync** | Fetches data from your configured source (Service Account JSON, API Key, JSON URL, or CSV URL) and saves it to extension local storage for hover and inlay hints. |
-| **Sheet Language Global Helper: Export synced dictionary to workspace JSON** | Writes under **`workspaceExportJsonPath`**: **`all_language.json`** (union of keys matching **`targetSheetNames`** prefixes) and one **`{prefix}_lang.json`** per configured prefix (only if that prefix has keys). Unmatched keys are omitted. If **no** key matches any prefix, export shows a warning and writes nothing. Longer prefixes win when overlapping. **Empty `workspaceExportJsonPath` → error.** Run **Sync** first if you have no data yet. |
+| **Sheet Language Global Helper: Export dictionary to JSON (fetch latest sheet first)** | Writes under **`workspaceExportJsonPath`**: **`all_language.json`** (union of keys matching **`targetSheetNames`** prefixes) and one **`{prefix}_lang.json`** per configured prefix (only if that prefix has keys). Unmatched keys are omitted. If **no** key matches any prefix, export shows a warning and writes nothing. Longer prefixes win when overlapping. **Empty `workspaceExportJsonPath` → error.** Each export fetches fresh remote data; missing source settings or fetch failures cancel export. `all_language.json` is written only when `exportAllLanguageJson` is enabled. |
 
 ### Data Synchronization
 
@@ -159,7 +159,7 @@ Open the Command Palette (`Ctrl + Shift + P` / `Cmd + Shift + P`) and run:
 ```mermaid
 flowchart LR
     A[Run Command<br/>Ctrl+Shift+P] --> B{Data source?}
-    B -->|Service Account JSON| C[Sheets API - OAuth]
+    B -->|Service Account JSON| C[Sheets API]
     B -->|API Key| C
     B -->|JSON URL| D[JSON API<br/>Fetch Data]
     B -->|CSV URL| E2[CSV URL<br/>Fetch Data]
@@ -186,13 +186,15 @@ flowchart LR
 
 Use this when you want a **file on disk** (e.g. for code review, build scripts, or documentation) with the same structure the extension uses in memory.
 
-1. Run **Sheet Connect Sync** at least once so local storage has data.
+1. Configure a remote data source. Export fetches fresh data itself, so an initial Sync is not required. Missing source settings or fetch failures log an error and cancel export.
 2. Open a **folder** in VS Code (not only single files without a workspace folder).
 3. Set **`workspaceExportJsonPath`** (e.g. `language` or `src/locales`). **Required** — if empty, the export command **shows an error**. No `..` segments; use a path relative to the first workspace folder root.
 4. Optionally adjust **`targetSheetNames`** (comma-separated sheet/prefix list, same as sync). Export uses this list to split keys: e.g. `WD,ST,MS` → `wd_lang.json`, `st_lang.json`, `ms_lang.json` (only files with at least one key are created).
-5. Run **Sheet Language Global Helper: Export synced dictionary to workspace JSON**. The folder (and any missing parent segments) is created if needed, then:
-   - **`all_language.json`** — only keys whose code starts with one of the **`targetSheetNames`** prefixes (same union as the per-prefix files)
+5. Run **Sheet Language Global Helper: Export dictionary to JSON (fetch latest sheet first)**. The folder (and any missing parent segments) is created if needed, then:
+   - **`all_language.json`** — created only when `exportAllLanguageJson` is enabled; only keys whose code starts with one of the **`targetSheetNames`** prefixes (same union as the per-prefix files)
    - **`{lowercasePrefix}_lang.json`** — one per **`targetSheetNames`** entry that has at least one matching key (empty prefixes are skipped)
+
+**Combined file setting:** `languageHelper.exportAllLanguageJson` defaults to `true`. Uncheck **Export All Language Json** to write only per-prefix files. The success notification and Output log list only files actually written. An existing `all_language.json` is left untouched.
 
 **JSON shape** (each file is an object: code key → language code → text):
 
@@ -277,43 +279,18 @@ Settings use the prefix `languageHelper.` (e.g. `languageHelper.sheetApiKey` in 
 | `targetSheetNames` | Comma-separated sheet names when `allSheetNames` is off. | Optional | `WD,ST,CD` |
 | `hoverKeyPatterns` | Comma-separated patterns for hover/inlay (e.g. `WD,ST,CD`). | Optional | `WD,ST,CD` |
 | `showInlineTranslation` | Show inlay hints for translations. | Optional | `true` |
+| `japaneseLanguageCode` | Japanese source column name. Only the selected field is stored; no mirroring. | Optional | `ja` |
 | `inlineTranslationLanguage` | Language code for inlay text (`ko`, `en`, …). | Optional | `ko` |
+| `exportAllLanguageJson` | Include `all_language.json` in exports. Disable to write only per-prefix files. | Optional | `true` |
 | `workspaceExportJsonPath` | **Required for export:** relative folder under the first workspace root (e.g. `language`). Empty → export command errors. No `..`. | **Export** | (empty) |
 
 ### How It Works
 
-```mermaid
-flowchart TD
-    A[Run Sync Command] --> B{API Key Configured?}
-    
-    B -->|Yes| C[Use Google Sheets API]
-    B -->|No| D[Use CSV URL]
-    
-    C --> C1{allSheetNames<br/>Checked?}
-    C1 -->|Yes| C2[Fetch All Sheets<br/>Auto Query Sheet List]
-    C1 -->|No| C3[targetSheetNames<br/>Fetch Specified Sheets Only<br/>e.g., WD,ST,CD]
-    
-    C2 --> E[Parse CSV Data]
-    C3 --> E
-    D --> E
-    
-    E --> F[Save to Local Storage]
-    F --> G[Available for Hover]
-    
-    style B fill:#ffe0b2,color:#000000
-    style C fill:#c8e6c9,color:#000000
-    style D fill:#ffe0b2,color:#000000
-    style C2 fill:#b3e5fc,color:#000000
-    style C3 fill:#b3e5fc,color:#000000
-    style F fill:#e1bee7,color:#000000
-    style G fill:#c8e6c9,color:#000000
-```
+Sources are selected in this order: **Service Account JSON → API Key → JSON URL → CSV URL**. A failed fetch reports an error without switching to another source.
 
-**Summary**:
-- **API Key Available**: Use Google Sheets API
-  - `allSheetNames` checked → Fetch all sheets
-  - `allSheetNames` unchecked → Fetch only sheets specified in `targetSheetNames`
-- **No API Key**: Use CSV URL (single sheet only)
+- Sheets API: fetch all tabs when `allSheetNames` is enabled, or the tabs in `targetSheetNames` otherwise.
+- JSON URL: read an array or dictionary object. CSV URL: read one published sheet.
+- Export: fetch fresh data, then write per-prefix JSON files. Include the combined file only when `exportAllLanguageJson` is enabled.
 
 ## 📝 Spreadsheet Format
 
@@ -323,7 +300,7 @@ flowchart TD
 | ST000001 | 감사합니다 | Thank you | ありがとう |
 
 - First row is used as header
-- `key` column is required; `ko`, `en`, `ja` are optional
+- `key` is required; language columns are optional. If Japanese columns are present, they must include the `ja` or `jp` field selected in `japaneseLanguageCode`.
 
 ## 🐛 Troubleshooting
 
@@ -345,7 +322,7 @@ flowchart TD
 - Set **`workspaceExportJsonPath`** (e.g. `language`). The export command **requires** this; it errors if blank.
 
 ### Export JSON: "no data"
-- Run **Sheet Connect Sync** first, then export again.
+- Check that the remote source contains valid `key` rows, then run Export again.
 
 ### Hover Not Working
 - Make sure data synchronization has been run first

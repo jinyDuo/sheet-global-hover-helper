@@ -66,6 +66,7 @@ export const exportLanguageDictionaryToWorkspaceJson = async (
 	}
 
 	const config = vscode.workspace.getConfiguration('languageHelper');
+	const isExportAllLanguageJson = config.get<boolean>('exportAllLanguageJson', true);
 	const rawExportPath = config.get<string>(CONFIG_EXPORT_PATH_KEY, '').trim();
 
 	if (rawExportPath.length === 0) {
@@ -110,11 +111,7 @@ export const exportLanguageDictionaryToWorkspaceJson = async (
 		vscode.window.showErrorMessage(message);
 		return;
 	}
-	const allLanguageDictionary = filterLanguageDictionaryToDeclaredSheetLanguages(
-		normalizeLanguageDictionaryFromSheet(mergedForExport, preferredJapanese),
-		sheetLanguageCodeItems
-	);
-	const matchedKeyCount = Object.keys(allLanguageDictionary).length;
+	const matchedKeyCount = Object.keys(mergedForExport).length;
 
 	if (matchedKeyCount === 0) {
 		vscode.window.showWarningMessage(
@@ -139,8 +136,14 @@ export const exportLanguageDictionaryToWorkspaceJson = async (
 	const textEncoder = new TextEncoder();
 	const writtenSummaryItems: string[] = [];
 
-	await writeJsonFile(exportDirectoryUri, ALL_LANGUAGE_FILE_NAME, allLanguageDictionary, textEncoder);
-	writtenSummaryItems.push(`${exportPathDisplay}/${ALL_LANGUAGE_FILE_NAME} (${matchedKeyCount}개)`);
+	if (isExportAllLanguageJson) {
+		const allLanguageDictionary = filterLanguageDictionaryToDeclaredSheetLanguages(
+			normalizeLanguageDictionaryFromSheet(mergedForExport, preferredJapanese),
+			sheetLanguageCodeItems
+		);
+		await writeJsonFile(exportDirectoryUri, ALL_LANGUAGE_FILE_NAME, allLanguageDictionary, textEncoder);
+		writtenSummaryItems.push(`${exportPathDisplay}/${ALL_LANGUAGE_FILE_NAME} (${matchedKeyCount}개)`);
+	}
 
 	for (const { sheetPrefix, dictionary } of prefixBucketItems) {
 		const partialKeyCount = Object.keys(dictionary).length;

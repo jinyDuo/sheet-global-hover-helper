@@ -193,6 +193,16 @@ suite('Test Suite', () => {
 3. Testing 뷰에서 **Run Test** 버튼 클릭 또는 `Ctrl/Cmd + ; A` 단축키
 4. 테스트 결과 확인
 
+전체 자동 테스트는 `pnpm test`로 실행합니다. 최신 VS Code에서 테스트 실행기 경로 오류(`Electron ENOENT`)가 나면, 컴파일 후 확인된 버전으로 실행합니다:
+
+```bash
+pnpm run compile-tests
+pnpm run build
+pnpm exec vscode-test --code-version 1.129.0
+```
+
+Export 검수 시 `languageHelper.exportAllLanguageJson`의 기본값·켜짐·꺼짐을 확인합니다. 꺼졌을 때 접두사별 파일만 저장되고 성공 알림·Output 로그에 `all_language.json`이 표시되지 않아야 합니다. 기존 전체 파일은 유지됩니다. 원격 소스 미설정·조회 실패 시 Export가 중단되는지도 확인합니다.
+
 ### 4.3 린트 검사
 
 ```bash

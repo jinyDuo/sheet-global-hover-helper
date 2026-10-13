@@ -6,6 +6,13 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
+## [0.0.31] - 2026-10-13
+
+- Export 시 원격 소스가 비어 있으면 오류를 기록하고 중단하여 기존 캐시가 최신 데이터로 저장되지 않도록 수정. API 인증 요청 구성을 공통화하고 불필요한 조건·중간 함수를 제거.
+
+- `languageHelper.exportAllLanguageJson` 체크박스 추가(기본 `true`). 해제하면 `all_language.json` 생성을 건너뛰고 접두사별 파일만 저장하며, 성공 알림·Output 로그에는 실제 저장한 파일만 표시.
+- Export 명령 핸들러 중복 선언 제거: 시트에서 최신 데이터를 가져온 뒤 내보내는 핸들러로 통일.
+
 ## [0.0.27]
 
 - **JSON 보내기(Export)**: 실행 시 **Sheet Connect Sync와 동일한** 원격 가져오기·검증·파싱·`globalState` 저장을 한 번 수행한 뒤, 그 스냅샷만 워크스페이스 JSON에 기록. 가져오기 실패 시 **JSON 파일은 쓰지 않음**(경고만 표시; 상세 오류는 동기화와 동일하게 표시).
